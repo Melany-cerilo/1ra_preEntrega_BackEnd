@@ -4,8 +4,11 @@ class ProductManager {
   }
 
   addProduct(title, description, price, thumbnail, code, stock) {
+    //Este metodo agrega productos al array "Products"
+    //Verifico que los campos no esten vacios
+    //Mediante el metodo FindIndex busco si el campo code ya existe.
     const newProduct = {
-      id: this.products.length + 1,
+      id: this.products.length + 1, //Asigna ID único consecutivo
       title,
       description,
       price,
@@ -29,10 +32,12 @@ class ProductManager {
   }
 
   getProducts() {
+    //Este metodo se utiliza para obtener el array completo de Products
     return this.products;
   }
 
   getProductById(id) {
+    //Mediante el metodo Find busco por ID. Si existe devuelve el objeto del producto con todos sus atributos.
     const foundProduct = this.products.find((product) => product.id === id);
 
     return foundProduct;
@@ -42,9 +47,12 @@ class ProductManager {
 function main() {
   const manager = new ProductManager();
 
-  // Agregar productos
+  console.log(manager.getProducts());
+  // Agrega productos
   //Verifica si el campo "code" esta repetido
+
   let error = manager.addProduct(
+    "Producto 1", //Prueba quitar nombre de producto para que muestre el mensaje de campo incompleto.
     "Descripción 1",
     10,
     "thumbnail1.jpg",
@@ -63,7 +71,7 @@ function main() {
     "Descripción 2",
     20,
     "thumbnail2.jpg",
-    "CODE2",
+    "CODE1", //Se repite campo "code" para verificar el error
     150
   );
   if (error) {
@@ -72,25 +80,10 @@ function main() {
     console.log("Producto agregado");
   }
 
-  console.log(manager.getProducts());
-
-  error = manager.addProduct(
-    "Producto 3",
-    "Descripción 3",
-    20,
-    "thumbnail3.jpg",
-    "CODE2", //codigo repetido
-    150
-  );
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Producto agregado");
-  }
   console.log(manager.getProducts());
 
   // Obtener un producto por su ID
-  const id = 4; // Cambia el ID para probar distintos casos
+  const id = 2; // Cambiar el ID para probar distintos casos
   const product = manager.getProductById(id);
 
   if (product) {
@@ -100,4 +93,4 @@ function main() {
   }
 }
 
-main();
+main(); //Ejecución de función de testing del desafio
