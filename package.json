@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Melany-cerilo/1er_entrega_BackEnd/issues"
   },
-  "homepage": "https://github.com/Melany-cerilo/1er_entrega_BackEnd#readme"
+  "homepage": "https://github.com/Melany-cerilo/1er_entrega_BackEnd#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
