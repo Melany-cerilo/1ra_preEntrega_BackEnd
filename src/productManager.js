@@ -33,9 +33,10 @@ class ProductManager {
       !newProduct.title ||
       !newProduct.description ||
       !newProduct.price ||
-      !newProduct.thumbnail ||
       !newProduct.code ||
-      !newProduct.stock
+      !newProduct.stock ||
+      !newProduct.status ||
+      !newProduct.category
     ) {
       return "Ingresar todos los campos.";
     }
@@ -48,6 +49,7 @@ class ProductManager {
     }
     this.id++;
     newProduct.id = this.id;
+    newProduct.status = true;
     this.products.push(newProduct);
     this.updateIdDocument();
     this.updateProductsDocument();
@@ -82,16 +84,15 @@ class ProductManager {
 
     return foundProduct;
   }
-  updateProduct(updatedProductInfo) {
+  updateProduct(updatedProductInfo, id) {
     //Este metodo busca el indice del producto en el array
     //Utilizo spread operator para modificar atributos del producto
     //Con el metodo updateProductsDocument actualizo para persistir los cambios
-    const indexFound = this.products.findIndex(
-      (product) => product.id === updatedProductInfo.id
-    );
+    // hago id: id para persistir el id del objeto por mas que lo cambien desde el body
+    const indexFound = this.products.findIndex((product) => product.id === id);
 
     if (indexFound !== -1) {
-      this.products[indexFound] = { ...updatedProductInfo };
+      this.products[indexFound] = { ...updatedProductInfo, id: id };
     } else {
       return "No se encontró el objeto para modificar";
     }
