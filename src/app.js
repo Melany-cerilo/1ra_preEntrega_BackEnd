@@ -5,10 +5,7 @@ import productsRouter from "../routes/products.router.js";
 
 const app = Express();
 const PORT = 8080;
-// const pathProd = "./src/products.txt";
-// const pathId = "./src/id.txt";
 
-//prueba nueva de rutas:
 app.use("/", cartsRouter);
 app.use("/", productsRouter);
 

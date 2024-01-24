@@ -10,13 +10,15 @@ const pathIdCart = "./src/idCart.json";
 router.use(Express.json());
 router.use(Express.urlencoded({ extended: true }));
 
+//servicio para agregar un carrito al array de carritos. asignandole un ID (al principio estará vacio)
 router.post("/api/carts", (req, res) => {
   const manager = new CartManager(pathCarts, pathIdCart);
-  manager.addCart(req.body);
-  res.send({ msg: "carrito agregado al array" });
+  let id = manager.addCart();
+  res.send({ msg: `carrito agregado al array con ID:`, id: id });
 });
 
-router.post("/:cartId/product/:prodId", (req, res) => {
+//servicio para agregar productos y cantidad al carrito indicado.
+router.post("/api/carts/:cartId/product/:prodId", (req, res) => {
   const manager = new CartManager(pathCarts, pathIdCart);
   let cartId = parseInt(req.params.cartId);
   let prodId = parseInt(req.params.prodId);
@@ -32,6 +34,7 @@ router.post("/:cartId/product/:prodId", (req, res) => {
   });
 });
 
+//servicio para traer el carrito con el ID que se indica con el parametro
 router.get("/api/carts/:cartId", (req, res) => {
   const manager = new CartManager(pathCarts, pathIdCart);
   let cartId = parseInt(req.params.cartId);

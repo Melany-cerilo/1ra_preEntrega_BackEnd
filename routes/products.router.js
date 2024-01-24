@@ -12,7 +12,7 @@ const pathId = "./src/id.json";
 router.use(Express.json());
 router.use(Express.urlencoded({ extended: true }));
 
-router.get("/products", (req, res) => {
+router.get("/api/products", (req, res) => {
   //Servicio para obtener productos con posibilidad de limitar la cantidad de resultados.
   const manager = new ProductManager(pathProd, pathId);
   let products = manager.getProducts();
@@ -21,7 +21,7 @@ router.get("/products", (req, res) => {
   res.json(products);
 });
 
-router.get("/products/:idProduct", (req, res) => {
+router.get("/api/products/:idProduct", (req, res) => {
   //Servicio para obtener producto por ID
   const manager = new ProductManager(pathProd, pathId);
   let idProduct = parseInt(req.params.idProduct);
@@ -30,6 +30,7 @@ router.get("/products/:idProduct", (req, res) => {
   res.send({ product });
 });
 
+//servicio para agregar un producto
 router.post("/api/products", (req, res) => {
   const manager = new ProductManager(pathProd, pathId);
   let error = manager.addProduct(req.body);
@@ -38,6 +39,8 @@ router.post("/api/products", (req, res) => {
   }
   res.send(error);
 });
+
+//servicio para actualizar un producto
 router.put("/api/products/:idProduct", (req, res) => {
   const manager = new ProductManager(pathProd, pathId);
   let idProduct = parseInt(req.params.idProduct);
@@ -47,6 +50,8 @@ router.put("/api/products/:idProduct", (req, res) => {
   }
   res.send(error);
 });
+
+//servicio para eliminar un producto buscandolo por ID que se envia por parametro
 router.delete("/api/products/:idProduct", (req, res) => {
   const manager = new ProductManager(pathProd, pathId);
   let idProduct = parseInt(req.params.idProduct);

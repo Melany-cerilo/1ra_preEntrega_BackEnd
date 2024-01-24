@@ -35,7 +35,6 @@ class ProductManager {
       !newProduct.price ||
       !newProduct.code ||
       !newProduct.stock ||
-      !newProduct.status ||
       !newProduct.category
     ) {
       return "Ingresar todos los campos.";
@@ -47,9 +46,9 @@ class ProductManager {
     if (indexFound !== -1) {
       return "Error. Codigo repetido";
     }
+    newProduct.status = true;
     this.id++;
     newProduct.id = this.id;
-    newProduct.status = true;
     this.products.push(newProduct);
     this.updateIdDocument();
     this.updateProductsDocument();
