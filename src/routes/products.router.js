@@ -1,6 +1,7 @@
 import Express from "express";
-import ProductManager from "../src/productManager.js";
+import ProductManager from "../productManager.js";
 
+import socketServer from "../app.js";
 const router = Express.Router();
 
 const pathProd = "./src/products.json";
@@ -36,6 +37,7 @@ router.post("/api/products", (req, res) => {
   let error = manager.addProduct(req.body);
   if (!error) {
     res.send({ msg: "Producto agregado" });
+    socketServer.emit("product_change", manager.getProducts());
   }
   res.send(error);
 });
@@ -47,6 +49,7 @@ router.put("/api/products/:idProduct", (req, res) => {
   let error = manager.updateProduct(req.body, idProduct);
   if (!error) {
     res.send({ msg: "Producto modificado" });
+    socketServer.emit("product_change", manager.getProducts());
   }
   res.send(error);
 });
@@ -58,6 +61,7 @@ router.delete("/api/products/:idProduct", (req, res) => {
   let error = manager.deleteProduct(idProduct);
   if (!error) {
     res.send({ msg: "Producto eliminado" });
+    socketServer.emit("product_change", manager.getProducts());
   }
   res.send(error);
 });
