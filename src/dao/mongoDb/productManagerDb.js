@@ -14,7 +14,7 @@ class ProductManagerDb {
     ) {
       return { msg: "Ingresar todos los campos." };
     }
-    // const product = productsModel.findOne({ code: newProduct.code }).lean();
+
     const product = await this.getProductByCode(newProduct.code);
     console.log(product);
     if (product) {
