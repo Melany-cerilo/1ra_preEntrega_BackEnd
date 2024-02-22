@@ -21,11 +21,11 @@ function HTMLPorProducto(product) {
             
               <div class="card" >
                 <h1> ${product.title}</h1>
-                <h2>ID: ${product.id}</h2>
+                <h2>ID: ${product._id}</h2>
                 <p>Descripción: ${product.description}</p>
                 <p>Precio: ${product.price}</p>
                 <p>Stock: ${product.stock}</p>
-                <p>Categoria: ${product.stock}</p>
+                <p>Categoria: ${product.category}</p>
                 <p>Status:${product.status} </p>
                 <p>Codigo: ${product.code}</p>
             </div>

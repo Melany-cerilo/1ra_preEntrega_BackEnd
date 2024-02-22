@@ -1,50 +1,58 @@
 import Express from "express";
-import CartManager from "../cartManager.js";
+import cartManagerDb from "../dao/mongoDb/cartManagerDb.js";
 
 const router = Express.Router();
-
-const pathCarts = "./src/carts.json";
-const pathIdCart = "./src/idCart.json";
 
 //Middlewares
 router.use(Express.json());
 router.use(Express.urlencoded({ extended: true }));
 
-//servicio para agregar un carrito al array de carritos. asignandole un ID (al principio estará vacio)
-router.post("/api/carts", (req, res) => {
-  const manager = new CartManager(pathCarts, pathIdCart);
-  let id = manager.addCart();
-  res.send({ msg: `carrito agregado al array con ID:`, id: id });
+//servicio para agregar un carrito a la colección de carritos en la db. asignandole un ID (al principio estará vacio)
+router.post("/api/carts", async (req, res) => {
+  const manager = new cartManagerDb();
+  let resultado = await manager.addCart();
+  if (!resultado._id) {
+    res.send({ msg: `No se pudo crear el carrito` });
+  } else {
+    res.send({ msg: `Carrito creado con ID:`, id: resultado._id });
+  }
 });
 
 //servicio para agregar productos y cantidad al carrito indicado.
-router.post("/api/carts/:cartId/product/:prodId", (req, res) => {
-  const manager = new CartManager(pathCarts, pathIdCart);
-  let cartId = parseInt(req.params.cartId);
-  let prodId = parseInt(req.params.prodId);
-  let quantity = req.body.quantity;
-  let error = manager.addtoCart(cartId, prodId, quantity);
-  if (error) {
-    res.send({
-      msg: `No se pudo agregar producto a tu carrito con ID ${cartId}`,
-    });
+router.post("/api/carts/:cartId/product/:prodId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let prodId = req.params.prodId;
+  let quantity = parseInt(req.body.quantity);
+  let error = await manager.addtoCart(cartId, prodId, quantity);
+  if (!error) {
+    res.send({ msg: "Agregaste productos a tu carrito." });
+  } else {
+    res.send({ msg: error });
   }
-  res.send({
-    msg: `se agregó un nuevo producto a tu carrito con ID ${cartId}`,
-  });
 });
 
 //servicio para traer el carrito con el ID que se indica con el parametro
-router.get("/api/carts/:cartId", (req, res) => {
-  const manager = new CartManager(pathCarts, pathIdCart);
-  let cartId = parseInt(req.params.cartId);
-  let result = manager.getCartById(cartId);
-  if (result) {
-    res.send({ result });
+router.get("/api/carts/:cartId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let cart = await manager.getCartById(cartId);
+  if (cart) {
+    res.send({ cart });
   } else {
-    res.status(404).json({
+    res.send({
       msg: `No se encontró carrito con Id: ${cartId}`,
     });
+  }
+});
+//servicio para traer todos los carritos de la colección carritos.
+router.get("/api/carts", async (req, res) => {
+  const manager = new cartManagerDb();
+  let carts = await manager.getCarts();
+  if (carts.length > 0) {
+    res.send({ msg: "Se encontraron carritos", payload: carts });
+  } else {
+    res.send({ msg: "No se encontraron carritos" });
   }
 });
 

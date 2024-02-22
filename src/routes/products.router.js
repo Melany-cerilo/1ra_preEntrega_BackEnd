@@ -1,69 +1,74 @@
 import Express from "express";
-import ProductManager from "../productManager.js";
-
+import ProductManagerDb from "../dao/mongoDb/productManagerDb.js";
 import socketServer from "../app.js";
 const router = Express.Router();
-
-const pathProd = "./src/products.json";
-const pathId = "./src/id.json";
-//endpoint products
-//hacer aca todos el get el post el put y el delete
 
 //Middlewares
 router.use(Express.json());
 router.use(Express.urlencoded({ extended: true }));
 
-router.get("/api/products", (req, res) => {
+router.get("/api/products", async (req, res) => {
   //Servicio para obtener productos con posibilidad de limitar la cantidad de resultados.
-  const manager = new ProductManager(pathProd, pathId);
-  let products = manager.getProducts();
+  const manager = new ProductManagerDb();
+  let products = await manager.getProducts();
   let limit = parseInt(req.query.limit);
   if (!isNaN(limit) && limit > 0) products = products.slice(0, limit);
-  res.json(products);
+  if (products.length > 0) {
+    res.send({ msg: "Se encontraron productos", payload: products });
+  } else {
+    res.send({ msg: "No se encontraron productos" });
+  }
 });
 
-router.get("/api/products/:idProduct", (req, res) => {
+router.get("/api/products/:idProduct", async (req, res) => {
   //Servicio para obtener producto por ID
-  const manager = new ProductManager(pathProd, pathId);
-  let idProduct = parseInt(req.params.idProduct);
-  let product = manager.getProductById(idProduct);
-  if (!product) return res.send({ error: "No se encuentra el producto" });
-  res.send({ product });
+  const manager = new ProductManagerDb();
+  let idProduct = req.params.idProduct;
+  let product = await manager.getProductById(idProduct);
+  if (!product) {
+    res.send({ error: "No se encuentra el producto" });
+  } else {
+    res.send({ product });
+  }
 });
 
 //servicio para agregar un producto
-router.post("/api/products", (req, res) => {
-  const manager = new ProductManager(pathProd, pathId);
-  let error = manager.addProduct(req.body);
-  if (!error) {
-    res.send({ msg: "Producto agregado" });
-    socketServer.emit("product_change", manager.getProducts());
+router.post("/api/products", async (req, res) => {
+  const manager = new ProductManagerDb();
+  let resultado = await manager.addProduct(req.body);
+  if (resultado._id) {
+    res.send({ msg: "Producto agregado", _id: resultado.id });
+    socketServer.emit("product_change", await manager.getProducts());
+  } else {
+    res.send({ msg: "Error al agregar producto: " + resultado.msg });
   }
-  res.send(error);
 });
 
 //servicio para actualizar un producto
-router.put("/api/products/:idProduct", (req, res) => {
-  const manager = new ProductManager(pathProd, pathId);
-  let idProduct = parseInt(req.params.idProduct);
-  let error = manager.updateProduct(req.body, idProduct);
+router.put("/api/products/:idProduct", async (req, res) => {
+  const manager = new ProductManagerDb();
+  let idProduct = req.params.idProduct;
+  let error = await manager.updateProduct(req.body, idProduct);
   if (!error) {
     res.send({ msg: "Producto modificado" });
-    socketServer.emit("product_change", manager.getProducts());
+    socketServer.emit("product_change", await manager.getProducts());
+  } else {
+    res.send({ msg: error });
   }
-  res.send(error);
 });
 
 //servicio para eliminar un producto buscandolo por ID que se envia por parametro
-router.delete("/api/products/:idProduct", (req, res) => {
-  const manager = new ProductManager(pathProd, pathId);
-  let idProduct = parseInt(req.params.idProduct);
-  let error = manager.deleteProduct(idProduct);
+
+router.delete("/api/products/:idProduct", async (req, res) => {
+  const manager = new ProductManagerDb();
+  let idProduct = req.params.idProduct;
+  let error = await manager.deleteProduct(idProduct);
   if (!error) {
     res.send({ msg: "Producto eliminado" });
-    socketServer.emit("product_change", manager.getProducts());
+    socketServer.emit("product_change", await manager.getProducts());
+  } else {
+    res.send({ msg: error });
   }
-  res.send(error);
 });
 
 export default router;
