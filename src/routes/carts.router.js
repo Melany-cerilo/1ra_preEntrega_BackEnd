@@ -12,9 +12,13 @@ router.post("/api/carts", async (req, res) => {
   const manager = new cartManagerDb();
   let resultado = await manager.addCart();
   if (!resultado._id) {
-    res.send({ msg: `No se pudo crear el carrito` });
+    res.send({ status: "error", msg: `No se pudo crear el carrito` });
   } else {
-    res.send({ msg: `Carrito creado con ID:`, id: resultado._id });
+    res.send({
+      status: "success",
+      msg: `Carrito creado con ID:`,
+      id: resultado._id,
+    });
   }
 });
 
@@ -26,9 +30,9 @@ router.post("/api/carts/:cartId/product/:prodId", async (req, res) => {
   let quantity = parseInt(req.body.quantity);
   let error = await manager.addtoCart(cartId, prodId, quantity);
   if (!error) {
-    res.send({ msg: "Agregaste productos a tu carrito." });
+    res.send({ status: "success", msg: "Agregaste productos a tu carrito." });
   } else {
-    res.send({ msg: error });
+    res.send({ status: "error", msg: error });
   }
 });
 
@@ -38,9 +42,10 @@ router.get("/api/carts/:cartId", async (req, res) => {
   let cartId = req.params.cartId;
   let cart = await manager.getCartById(cartId);
   if (cart) {
-    res.send({ cart });
+    res.send({ status: "success", payload: cart });
   } else {
     res.send({
+      status: "error",
       msg: `No se encontró carrito con Id: ${cartId}`,
     });
   }
@@ -50,9 +55,65 @@ router.get("/api/carts", async (req, res) => {
   const manager = new cartManagerDb();
   let carts = await manager.getCarts();
   if (carts.length > 0) {
-    res.send({ msg: "Se encontraron carritos", payload: carts });
+    res.send({
+      status: "success",
+      msg: "Se encontraron carritos",
+      payload: carts,
+    });
   } else {
-    res.send({ msg: "No se encontraron carritos" });
+    res.send({ status: "error", msg: "No se encontraron carritos" });
+  }
+});
+
+//servicio para eliminar del carrito el producto seleccionado.
+router.delete("/api/carts/:cartId/products/:prodId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let prodId = req.params.prodId;
+  let error = await manager.removeProductFormCart(cartId, prodId);
+  if (!error) {
+    res.send({ status: "success", msg: "Producto eliminado de tu carrito" });
+  } else {
+    res.send({ status: "error", msg: error });
+  }
+});
+//servicio para actualizar el carrito con nuevo arreglo de productos.
+router.put("/api/carts/:cartId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let updateCartInfo = req.body.products;
+  let error = await manager.updateCart(cartId, updateCartInfo);
+  if (!error) {
+    res.send({
+      status: "success",
+      msg: "Carrito modificado con productos nuevos",
+    });
+  } else {
+    res.send({ status: "error", msg: error });
+  }
+});
+//servicio para actualizar solo la cantidad de ejemplares del producto.
+router.put("/api/carts/:cartId/products/:prodId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let prodId = req.params.prodId;
+  let modifyQuantity = req.body.quantity;
+  let error = await manager.updateQuantity(cartId, prodId, modifyQuantity);
+  if (!error) {
+    res.send({ status: "success", msg: "Quantity de tu producto modificado" });
+  } else {
+    res.send({ status: "error", msg: error });
+  }
+});
+//servicio para eliminar todos los productos del carrito.
+router.delete("/api/carts/:cartId", async (req, res) => {
+  const manager = new cartManagerDb();
+  let cartId = req.params.cartId;
+  let error = await manager.removeAllProductsFormCart(cartId);
+  if (!error) {
+    res.send({ status: "success", msg: "Productos eliminados de tu carrito" });
+  } else {
+    res.send({ status: "error", msg: error });
   }
 });
 

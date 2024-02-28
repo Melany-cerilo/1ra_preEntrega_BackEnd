@@ -1,0 +1,17 @@
+{{! div con ID para poder conectar con la manipulacion del DOM en mi archivo productsPaginate.js }}
+<div id="lista" class="product-container">
+
+  {{! Aca se mostrará lo que se resuelva de mi productsPaginate.js }}
+
+</div>
+
+<div>
+  <button id="button-prev" style="display: inline-block">Anterior</button>
+  <p style="display: inline-block">Pagina actual: </p><p
+    id="curr-page"
+    style="display: inline-block"
+  >1</p>
+  <button id="button-next" style="display: inline-block">Siguiente</button>
+</div>
+{{! script para conectar con la logica de mi productsPaginate.js }}
+<script src="/js/productsPaginate.js"></script>

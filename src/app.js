@@ -8,7 +8,6 @@ import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
-
 const app = Express();
 const PORT = 8080;
 const httpServer = app.listen(PORT, () =>

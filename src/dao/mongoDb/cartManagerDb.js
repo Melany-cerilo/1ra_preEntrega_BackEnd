@@ -15,9 +15,10 @@ class cartManagerDb {
     return cartsModel.find();
   }
 
-  getCartById(id) {
+  async getCartById(id) {
     //Metodo que retorna el carrito con ID indicado que viene por parametro.
-    return cartsModel.findOne({ _id: id });
+    let result = cartsModel.findOne({ _id: id }).populate("products.id");
+    return result;
   }
 
   async addtoCart(cartId, prodId, quantity) {
@@ -31,7 +32,7 @@ class cartManagerDb {
       return "No se encontró carrito para modificar";
     }
     const indexProduct = cart.products.findIndex(
-      (product) => product.id === prodId
+      (product) => product.id.toString() === prodId
     );
     if (indexProduct !== -1) {
       //Para este caso si se agrega un producto con un ID ya guardado en el carrito seleccionado, solo se sumará la cantidad.
@@ -50,6 +51,110 @@ class cartManagerDb {
       return "Error al modificar carrito";
     });
 
+    return;
+  }
+
+  async removeAllProductsFormCart(cartId) {
+    const cart = await cartsModel.findOne({ _id: cartId });
+    if (cart === null) {
+      return "No se encontró carrito para modificar";
+    }
+
+    // Eliminar todos los productos del carrito
+    cart.products = [];
+
+    let result = await cartsModel
+      .updateOne(
+        { _id: cartId },
+        { $set: { products: cart.products } } // Establece los productos del carrito como un array vacío
+      )
+      .catch((error) => {
+        console.error("Error al eliminar los productos del carrito", error);
+        return "Error al eliminar los productos del carrito";
+      });
+
+    if (result.matchedCount === 0) {
+      return "No se encontró el carrito para modificar";
+    } else if (result.modifiedCount === 0) {
+      return "No hay cambios";
+    }
+
+    return;
+  }
+
+  async updateCart(cartId, updateCartInfo) {
+    let cart = await cartsModel.findOne({ _id: cartId });
+    if (cart === null) {
+      return "No se encontró carrito para modificar";
+    }
+
+    cart.products = updateCartInfo;
+
+    const result = await cartsModel
+      .updateOne({ _id: cartId }, cart)
+      .catch((error) => {
+        console.error("Error al modificar", error);
+        return "Error al modificar";
+      });
+    if (result.matchedCount === 0) {
+      return "No se encontró carrito para modificar";
+    } else if (result.modifiedCount === 0) {
+      return "No hay cambios en el carrito enviado";
+    }
+    return;
+  }
+
+  async removeProductFormCart(cartId, prodId) {
+    let cart = await cartsModel.findOne({ _id: cartId });
+    if (cart === null) {
+      return "No se encontró carrito para modificar";
+    }
+    const indexProduct = cart.products.findIndex(
+      (product) => product.id.toString() === prodId
+    );
+    if (indexProduct !== -1) {
+      cart.products.splice(indexProduct, 1);
+    } else {
+      return "no se encontro tu producto para eliminar";
+    }
+    let result = await cartsModel
+      .updateOne({ _id: cartId }, cart)
+      .catch((error) => {
+        console.error("Error al eliminar el producto", error);
+        return "Error al modificar";
+      });
+    if (result.matchedCount === 0) {
+      return "No se encontró tu busqueda para modificar";
+    } else if (result.modifiedCount === 0) {
+      return "No hay cambios ";
+    }
+    return;
+  }
+
+  async updateQuantity(cartId, prodId, modifyQuantity) {
+    let cart = await cartsModel.findOne({ _id: cartId });
+    if (cart === null) {
+      return "No se encontró carrito para modificar";
+    }
+    const indexProduct = cart.products.findIndex(
+      (product) => product.id.toString() === prodId
+    );
+    if (indexProduct !== -1) {
+      cart.products[indexProduct].quantity = modifyQuantity;
+    } else {
+      return "no se encontro tu producto para modificar la cantidad";
+    }
+    const result = await cartsModel
+      .updateOne({ _id: cartId }, cart)
+      .catch((error) => {
+        console.error("Error al modificar", error);
+        return "Error al modificar";
+      });
+    if (result.matchedCount === 0) {
+      return "No se encontró tu busqueda para modificar";
+    } else if (result.modifiedCount === 0) {
+      return "No hay cambios ";
+    }
     return;
   }
 }

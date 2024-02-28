@@ -16,7 +16,6 @@ class ProductManagerDb {
     }
 
     const product = await this.getProductByCode(newProduct.code);
-    console.log(product);
     if (product) {
       return { msg: "Error. Codigo repetido" };
     }
@@ -36,6 +35,32 @@ class ProductManagerDb {
   getProducts() {
     //Este metodo retorna todos los productos de la colección de productos de la DB
     return productsModel.find().lean();
+  }
+  async paginateProducts(limit, page, sort, category) {
+    if (!limit) {
+      limit = 10;
+    }
+    if (!page) {
+      page = 1;
+    }
+    const options = {
+      limit: limit,
+      page: page,
+    };
+
+    if (sort === "asc") {
+      options.sort = { price: 1 };
+    } else if (sort === "desc") {
+      options.sort = { price: -1 };
+    }
+    const query = {};
+    if (category) {
+      query.category = category;
+    }
+
+    const pagination = await productsModel.paginate(query, options);
+
+    return pagination;
   }
 
   getProductById(id) {

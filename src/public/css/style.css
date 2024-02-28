@@ -30,3 +30,41 @@ p {
   font-size: 1em;
   color: #333;
 }
+
+.c-cart {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 50px;
+  margin: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.c-cart-header {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+.body {
+  padding: 10px 0;
+}
+
+.c-cart-body .product {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.c-cart-body .product:last-child {
+  border-bottom: none;
+}
+
+.product h4 {
+  margin-bottom: 5px;
+}
+
+.product p {
+  margin-bottom: 0;
+}
