@@ -59,7 +59,7 @@
   ![views](./capturas/paginate1.png)
 - PAGINACIÓN 2
   ![views](./capturas/paginate2.png)
-- PAGINACIÓN 2
+- PAGINACIÓN 3
   ![views](./capturas/paginate3.png)
 
 - Carrito con sus productos
