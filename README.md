@@ -1,4 +1,7 @@
-#Proyecto integrador II
+#Proyecto integrador
+
+- Agregando cookies y session al proyecto. video demostrativo:
+  https://www.loom.com/share/63b4eed03e7b4b918f9d763891175f97?sid=148cbcf4-135e-4a31-9d34-fcee1977d20a
 
 1- Servicio de productos.
 

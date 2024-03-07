@@ -1,4 +1,16 @@
 {{! plantilla con products actuales para el home  '/'}}
+{{#if session.admin}}
+  <h1>Rol: Administrador</h1>
+{{else}}
+  <h1>Rol: Usuario</h1>
+{{/if}}
+
+<h1>Bienvenido, {{session.firstName}} {{session.lastName}}</h1>
+<a href="/api/sessions/logOut">Cerrar sesion</a><br />
+<br />
+
+<a href="/profile">Mi perfil</a>
+
 <div class="product-container">
   {{#each products}}
     <div class="card">

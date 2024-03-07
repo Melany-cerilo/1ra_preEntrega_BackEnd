@@ -1,5 +1,9 @@
 import Express from "express";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import MongoStore from "connect-mongo";
+import sessionsRouter from "./routes/sessions.router.js";
 import viewsRouter from "./routes/views.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import productsRouter from "./routes/products.router.js";
@@ -27,15 +31,29 @@ app.set("view engine", "handlebars");
 
 app.use(Express.static(__dirname + "/public"));
 
+//Middlewares
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl:
+        "mongodb+srv://melCoder:melany1234@cluster0.xapkieu.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 15,
+    }),
+    secret: "mel1234lany",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
 app.use("/", viewsRouter);
 app.use("/", cartsRouter);
 app.use("/", productsRouter);
 app.use("/", messageRouter);
-
-//Middlewares
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: true }));
-
+app.use("/", sessionsRouter);
 //dejo en escucha el servidor
 socketServer.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado");
