@@ -55,7 +55,11 @@ router.get("/signIn", (req, res) => {
   if (req.session?.email) {
     return res.redirect("/");
   }
-  res.render("signIn");
+  let failed = false;
+  if (req.query.failed) {
+    failed = req.query.failed;
+  }
+  res.render("signIn", { failed });
 });
 
 //servicio que devuelve la vista del perfil del usuario.

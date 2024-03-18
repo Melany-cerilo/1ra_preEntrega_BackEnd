@@ -1,5 +1,7 @@
 import Express from "express";
 import usersModel from "../dao/models/user.model.js";
+import { createHash, isValidPassword } from "../utils.js";
+import passport from "passport";
 const router = Express.Router();
 
 //Middlewares
@@ -8,33 +10,30 @@ router.use(Express.urlencoded({ extended: true }));
 
 //servicio que realiza el login verificando si ususario y contraseña existe
 //y asignar roll de admin o usuario
-router.get("/api/sessions/logIn", async (req, res) => {
-  const { email, password } = req.query;
-  if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
-    req.session.email = email;
-    req.session.admin = true;
-    req.session.firstName = "Administrador";
-    req.session.lastName = "Coder";
+router.get(
+  "/api/sessions/logIn",
+  passport.authenticate("login", { failureRedirect: "/logIn?failed=true" }),
+  async (req, res) => {
+    if (!req.user)
+      return res
+        .status(400)
+        .send({ status: "error", error: "Credenciales invalidas" });
+    req.session.email = req.user.email;
+    req.session.admin = req.user.admin;
+    req.session.firstName = req.user.first_name;
+    req.session.lastName = req.user.last_name;
     return res.redirect("/");
   }
-
-  const user = await usersModel.findOne({ email: email, password: password });
-  if (user) {
-    req.session.email = email;
-    req.session.admin = false;
-    req.session.firstName = user.first_name;
-    req.session.lastName = user.last_name;
-    return res.redirect("/");
-  } else {
-    //si alguno de los campos es incorrecto. redireccionará al login con el error.
-    return res.redirect("/logIn?failed=true");
-  }
-});
+);
 //servicio para crear un usuario desde el formulario, luego redirecciono a login
-router.post("/api/sessions/signIn", (req, res) => {
-  usersModel.create(req.body);
-  res.redirect("/logIn");
-});
+router.post(
+  "/api/sessions/signIn",
+  passport.authenticate("register", { failureRedirect: "/signIn?failed=true" }),
+  async (req, res) => {
+    res.redirect("/logIn");
+  }
+);
+
 //servicio para desloguearse y destruir la sesion
 router.get("/api/sessions/logOut", (req, res) => {
   if (!req.session?.email) {
@@ -49,5 +48,23 @@ router.get("/api/sessions/logOut", (req, res) => {
     return res.redirect("/logIn");
   });
 });
+
+router.get(
+  "/api/sessions/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+  async (req, res) => {}
+);
+
+router.get(
+  "/api/sessions/githubcallback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  async (req, res) => {
+    req.session.email = req.user.email;
+    req.session.admin = req.user.admin;
+    req.session.firstName = req.user.first_name;
+    req.session.lastName = req.user.last_name;
+    res.redirect("/");
+  }
+);
 
 export default router;

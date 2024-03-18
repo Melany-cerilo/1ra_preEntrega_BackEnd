@@ -9,6 +9,8 @@ import cartsRouter from "./routes/carts.router.js";
 import productsRouter from "./routes/products.router.js";
 import messageRouter from "./routes/message.router.js";
 import handlebars from "express-handlebars";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
@@ -48,7 +50,9 @@ app.use(
     saveUninitialized: false,
   })
 );
-
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 app.use("/", viewsRouter);
 app.use("/", cartsRouter);
 app.use("/", productsRouter);

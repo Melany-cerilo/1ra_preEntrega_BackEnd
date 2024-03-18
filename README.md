@@ -1,6 +1,9 @@
 #Proyecto integrador
 
-- Agregando cookies y session al proyecto. video demostrativo:
+- Agregando bcrypt, passport y login con Github. Video demostrativo:
+  https://www.loom.com/share/733a466afab445aba37e6c90d4204c14?sid=35b7a1f6-2dd7-403e-b6ad-69aae80c704a
+
+- Agregando cookies y session al proyecto. Video demostrativo:
   https://www.loom.com/share/63b4eed03e7b4b918f9d763891175f97?sid=148cbcf4-135e-4a31-9d34-fcee1977d20a
 
 1- Servicio de productos.
