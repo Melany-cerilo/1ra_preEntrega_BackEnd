@@ -1,4 +1,5 @@
 import Express from "express";
+
 import usersModel from "../dao/models/user.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 import passport from "passport";
@@ -66,5 +67,19 @@ router.get(
     res.redirect("/");
   }
 );
+
+//Servicio para devolver en una respuesta el usuario actual.
+router.get("/api/session/current", async (req, res) => {
+  if (req.session.email) {
+    return res.send({
+      email: req.session.email,
+      admin: req.session.admin,
+      firstName: req.session.first_name,
+      lastName: req.session.last_name,
+    });
+  } else {
+    return res.send({ status: "error", error: "No hay usuario logueado" });
+  }
+});
 
 export default router;

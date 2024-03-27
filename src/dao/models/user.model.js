@@ -8,6 +8,7 @@ const usersSchema = new mongoose.Schema({
   last_name: { type: String, required: true, max: 300 },
   age: { type: Number, required: true, max: 100 },
   password: { type: String, required: true, max: 300 },
+  cart: { type: String, ref: "carritos" },
 });
 
 const usersModel = mongoose.model(usersCollection, usersSchema);

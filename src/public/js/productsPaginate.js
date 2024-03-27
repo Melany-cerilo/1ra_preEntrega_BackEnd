@@ -53,16 +53,16 @@ function actualizarHTML(response) {
 function HTMLPorProducto(product) {
   return `  
             
-              <div class="card" >
-                <h1> ${product.title}</h1>
-                <h2>ID: ${product._id}</h2>
-                <p>Descripción: ${product.description}</p>
-                <p>Precio: ${product.price}</p>
-                <p>Stock: ${product.stock}</p>
-                <p>Categoria: ${product.category}</p>
-                <p>Status:${product.status} </p>
-                <p>Codigo: ${product.code}</p>
-                <button type="button" id="agregarAlCarrito">Agregar al carrito</button>
-            </div>
+  <div class="card">
+  <h5 class="card-title">${product.title}</h5>
+  <p class="card-text">ID: ${product._id}</p>
+  <p class="card-text">Descripción: ${product.description}</p>
+  <p class="card-text">Precio: ${product.price}</p>
+  <p class="card-text">Stock: ${product.stock}</p>
+  <p class="card-text">Categoria: ${product.category}</p>
+  <p class="card-text">Status: ${product.status}</p>
+  <p class="card-text">Codigo: ${product.code}</p>
+  <button type="button" class="btn btn-primary">Agregar al carrito</button>
+</div>
             `;
 }

@@ -41,12 +41,13 @@ router.get("/logIn", (req, res) => {
   if (req.session?.email) {
     return res.redirect("/");
   }
+
   //si el login falla muestra "usuario y contraseña no existe " desde la vista
   let failed = false;
   if (req.query.failed) {
     failed = req.query.failed;
   }
-  res.render("logIn", { failed });
+  res.render("logIn", { failed, style: "style.css" });
 });
 //servicio que devuelve la vista del formulario del registro
 //si la sesion se encuentra iniciada y quiere cambiar la URL para registrarse
@@ -74,6 +75,7 @@ router.get("/profile", async (req, res) => {
     return res.redirect("/");
   }
   const user = await usersModel.findOne({ email: req.session.email }).lean();
-  res.render("profile", { user: user });
+  console.log(req.session.email);
+  res.render("profile", { user: user, style: "style.css" });
 });
 export default router;

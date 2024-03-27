@@ -1,24 +1,69 @@
-<h1>Registrate aquí</h1>
-{{#if failed}}
-  <h1>El usuario ya esta registrado</h1>
-{{/if}}
-<form action="/api/sessions/signIn" method="post">
-
-  <label for="email">Correo Electrónico:</label><br />
-  <input type="email" id="email" name="email" required /><br />
-
-  <label for="first_name">Nombre:</label><br />
-  <input type="text" id="first_name" name="first_name" required /><br />
-
-  <label for="last_name">Apellido:</label><br />
-  <input type="text" id="last_name" name="last_name" required /><br />
-
-  <label for="age">Edad:</label><br />
-  <input type="number" id="age" name="age" required /><br />
-
-  <label for="password">Contraseña:</label><br />
-  <input type="password" id="password" name="password" required /><br />
-
-  <button type="submit">Enviar</button>
-
-</form>
+<div class="container">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title text-center">Registrate aquí</h1>
+          {{#if failed}}
+            <p class="text-danger text-center">El usuario ya está registrado</p>
+          {{/if}}
+          <form action="/api/sessions/signIn" method="post">
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico:</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="first_name" class="form-label">Nombre:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="first_name"
+                name="first_name"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="last_name" class="form-label">Apellido:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="last_name"
+                name="last_name"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="age" class="form-label">Edad:</label>
+              <input
+                type="number"
+                class="form-control"
+                id="age"
+                name="age"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

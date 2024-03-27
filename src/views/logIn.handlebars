@@ -1,18 +1,31 @@
-<h1>Logueate aquí</h1>
-{{#if failed}}
-  <h1>Usuario o contraseña incorrecto.</h1>
-{{/if}}
-<form action="/api/sessions/logIn" method="get">
+<div class="login-container">
+  {{#if failed}}
+    <p class="text-danger text-center">Usuario o contraseña incorrecto.</p>
+  {{/if}}
+  <form action="/api/sessions/logIn" method="get">
 
-  <label for="email">Correo Electrónico:</label><br />
-  <input type="email" id="email" name="email" required /><br />
+    <label for="email">Correo Electrónico:</label><br />
+    <input
+      class="input-field"
+      type="email"
+      id="email"
+      name="email"
+      required
+    /><br />
 
-  <label for="password">Contraseña:</label><br />
-  <input type="password" id="password" name="password" required /><br />
+    <label for="password">Contraseña:</label><br />
+    <input
+      class="input-field"
+      type="password"
+      id="password"
+      name="password"
+      required
+    /><br />
 
-  <button type="submit">Ingresar</button>
+    <button class="btn btn-primary" type="submit">Ingresar</button><br />
+    <a class="btn btn-github" href="/api/sessions/github">Ingresar con Github</a><br
+    />
+    <a class="btn btn-primary" href="/signIn">Registrarse</a><br />
 
-</form>
-<a href="/signIn">Registrarse</a><br />
-<br />
-<a href="/api/sessions/github">Ingresar con Github</a>
+  </form>
+</div>

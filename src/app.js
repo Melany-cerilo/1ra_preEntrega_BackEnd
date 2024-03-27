@@ -43,7 +43,7 @@ app.use(
       mongoUrl:
         "mongodb+srv://melCoder:melany1234@cluster0.xapkieu.mongodb.net/ecommerce?retryWrites=true&w=majority",
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 15,
+      ttl: 900,
     }),
     secret: "mel1234lany",
     resave: false,
