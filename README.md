@@ -1,5 +1,8 @@
 #Proyecto integrador
 
+- Agregando cartId a usuario y ruta current para devolver en una respuesta el usuario actual. Video demostrativo:
+  https://www.loom.com/share/259c026e43474098857e4256e0b0cb81?sid=7015fead-3132-44d7-9243-005416f8de98
+
 - Agregando bcrypt, passport y login con Github. Video demostrativo:
   https://www.loom.com/share/733a466afab445aba37e6c90d4204c14?sid=35b7a1f6-2dd7-403e-b6ad-69aae80c704a
 
