@@ -1,81 +1,29 @@
 import Express from "express";
-import ProductManager from "../dao/fileSystem/productManager.js";
-import ProductManagerDb from "../dao/mongoDb/productManagerDb.js";
-import usersModel from "../dao/models/user.model.js";
+import ViewsController from "../controllers/views.controller.js";
 const router = Express.Router();
 const pathProd = "./src/products.json";
 const pathId = "./src/id.json";
 
+const viewsController = new ViewsController();
+
 //Este servicio le devuelve al home los productos  al cliente.
-router.get("/", async (req, res) => {
-  //si no hay un usuario logueado, se redireccionará a login
-  if (!req.session?.email) {
-    return res.redirect("/logIn");
-  }
-
-  const manager = new ProductManagerDb();
-  const products = await manager.getProducts();
-
-  res.render("home", { products, style: "style.css", session: req.session });
-});
+router.get("/", viewsController.getHome);
 //este servicio devuelve al cliente una vista que actualiza sola en tiempo real los productos mediante js con websocket.
-router.get("/realTimeProducts", (req, res) => {
-  res.render("realTimeProducts", { style: "style.css" });
-});
+router.get("/realTimeProducts", viewsController.realTimeProducts);
 //este servicio devuelve al cliente una vista con un formulario.
-router.get("/message", (req, res) => {
-  res.render("message");
-});
+router.get("/message", viewsController.getMessage);
 //este servicio devuelve al cliente una vista con los productos.
-router.get("/productsPaginate", (req, res) => {
-  res.render("productsPaginate", { style: "style.css" });
-});
+router.get("/productsPaginate", viewsController.productsPaginate);
 //este servicio devuelve al cliente una vista con el carrito seleccionado y sus productos.
-router.get("/cartView/:cartId", (req, res) => {
-  let cartId = req.params.cartId;
-  res.render("cartView", { cartId, style: "style.css" });
-});
+router.get("/cartView/:cartId", viewsController.getCart);
 // servicio para la vista de login
-router.get("/logIn", (req, res) => {
-  //si ya estoy logueado me redirecciona al home
-  if (req.session?.email) {
-    return res.redirect("/");
-  }
-
-  //si el login falla muestra "usuario y contraseña no existe " desde la vista
-  let failed = false;
-  if (req.query.failed) {
-    failed = req.query.failed;
-  }
-  res.render("logIn", { failed, style: "style.css" });
-});
+router.get("/logIn", viewsController.logIn);
 //servicio que devuelve la vista del formulario del registro
 //si la sesion se encuentra iniciada y quiere cambiar la URL para registrarse
 //se redireccionará a home
-router.get("/signIn", (req, res) => {
-  if (req.session?.email) {
-    return res.redirect("/");
-  }
-  let failed = false;
-  if (req.query.failed) {
-    failed = req.query.failed;
-  }
-  res.render("signIn", { failed });
-});
+router.get("/signIn", viewsController.signIn);
 
 //servicio que devuelve la vista del perfil del usuario.
 //si la sesion no esta iniciada me redireccionará a login
-router.get("/profile", async (req, res) => {
-  if (!req.session?.email) {
-    return res.redirect("/logIn");
-  }
-
-  if (req.session.admin === true) {
-    //por el momento redirecciono a home ya que los datos de admin estan hardcodeados como pide la consigna.
-    return res.redirect("/");
-  }
-  const user = await usersModel.findOne({ email: req.session.email }).lean();
-  console.log(req.session.email);
-  res.render("profile", { user: user, style: "style.css" });
-});
+router.get("/profile", viewsController.profile);
 export default router;

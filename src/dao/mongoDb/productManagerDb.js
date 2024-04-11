@@ -2,117 +2,65 @@ import productsModel from "../models/products.model.js";
 
 class ProductManagerDb {
   async addProduct(newProduct) {
-    //Este metodo agrega productos a la colección de productos en la DB.
-    //Verifico que los campos no esten vacios
-    if (
-      !newProduct.title ||
-      !newProduct.description ||
-      !newProduct.price ||
-      !newProduct.code ||
-      !newProduct.stock ||
-      !newProduct.category
-    ) {
-      return { msg: "Ingresar todos los campos." };
+    try {
+      return productsModel.create(newProduct);
+    } catch (error) {
+      console.log(error);
+      return null;
     }
-
-    const product = await this.getProductByCode(newProduct.code);
-    if (product) {
-      return { msg: "Error. Codigo repetido" };
-    }
-
-    const resultado = productsModel.create({
-      title: newProduct.title,
-      description: newProduct.description,
-      price: newProduct.price,
-      code: newProduct.code,
-      stock: newProduct.stock,
-      category: newProduct.category,
-      status: true,
-    });
-    return resultado;
   }
 
   getProducts() {
-    //Este metodo retorna todos los productos de la colección de productos de la DB
-    return productsModel.find().lean();
+    try {
+      return productsModel.find().lean();
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
-  async paginateProducts(limit, page, sort, category) {
-    if (!limit) {
-      limit = 10;
-    }
-    if (!page) {
-      page = 1;
-    }
-    const options = {
-      limit: limit,
-      page: page,
-    };
 
-    if (sort === "asc") {
-      options.sort = { price: 1 };
-    } else if (sort === "desc") {
-      options.sort = { price: -1 };
+  async paginateProducts(query, options) {
+    try {
+      return await productsModel.paginate(query, options);
+    } catch (error) {
+      console.log(error);
+      return null;
     }
-    const query = {};
-    if (category) {
-      query.category = category;
-    }
-
-    const pagination = await productsModel.paginate(query, options);
-
-    return pagination;
   }
 
   getProductById(id) {
-    //Este metodo retorna el producto indicado por ID que viene por parametro.
-    return productsModel.findOne({ _id: id });
+    try {
+      return productsModel.findOne({ _id: id });
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
+
   async getProductByCode(code) {
-    //Este metodo retorna el producto indicado por ID que viene por parametro.
-    return await productsModel.findOne({ code: code });
+    try {
+      return await productsModel.findOne({ code: code });
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
   async updateProduct(updatedProductInfo, id) {
-    //Este metodo actualizará el producto indicado por ID
-    //Validando que: todos los campos esten completos,
-    //que se encuentre el producto a modificar,
-    //si no hay cambios a realizar.
-    if (
-      !updatedProductInfo.title ||
-      !updatedProductInfo.description ||
-      !updatedProductInfo.price ||
-      !updatedProductInfo.code ||
-      !updatedProductInfo.stock ||
-      !updatedProductInfo.category
-    ) {
-      return "Ingresar todos los campos.";
+    try {
+      return await productsModel.updateOne({ _id: id }, updatedProductInfo);
+    } catch (error) {
+      console.log(error);
+      return null;
     }
-    const resultado = await productsModel
-      .updateOne({ _id: id }, updatedProductInfo)
-      .catch((error) => {
-        console.error("Error al modificar", error);
-        return "Error al modificar";
-      });
-    if (resultado.matchedCount === 0) {
-      return "No se encontró producto para modificar";
-    } else if (resultado.modifiedCount === 0) {
-      return "No hay cambios en el producto enviado";
-    }
-    return;
   }
 
   async deleteProduct(id) {
-    //Este metodo elimina un producto indicado por ID que viene por parametro.
-    const resultado = await productsModel
-      .deleteOne({ _id: id })
-      .catch((error) => {
-        console.error("Error ", error);
-        return "Error ";
-      });
-    if (resultado.deletedCount === 0) {
-      return "No se encontró producto para eliminar";
+    try {
+      return await productsModel.deleteOne({ _id: id });
+    } catch (error) {
+      console.log(error);
+      return null;
     }
-
-    return;
   }
 }
 

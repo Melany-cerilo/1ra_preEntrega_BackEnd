@@ -1,13 +1,10 @@
 import Express from "express";
 import mongoose from "mongoose";
+import appRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import sessionsRouter from "./routes/sessions.router.js";
-import viewsRouter from "./routes/views.router.js";
-import cartsRouter from "./routes/carts.router.js";
-import productsRouter from "./routes/products.router.js";
-import messageRouter from "./routes/message.router.js";
+import config from "./config/config.js";
 import handlebars from "express-handlebars";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -16,6 +13,7 @@ import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
 const app = Express();
 const PORT = 8080;
+
 const httpServer = app.listen(PORT, () =>
   console.log(`servidor con express en el puerto ${PORT}`)
 );
@@ -40,12 +38,11 @@ app.use(cookieParser());
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl:
-        "mongodb+srv://melCoder:melany1234@cluster0.xapkieu.mongodb.net/ecommerce?retryWrites=true&w=majority",
+      mongoUrl: config.mongoUrl,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 900,
     }),
-    secret: "mel1234lany",
+    secret: config.secret,
     resave: false,
     saveUninitialized: false,
   })
@@ -53,11 +50,10 @@ app.use(
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/", viewsRouter);
-app.use("/", cartsRouter);
-app.use("/", productsRouter);
-app.use("/", messageRouter);
-app.use("/", sessionsRouter);
+
+//configuracion de rutas
+app.use(appRouter);
+
 //dejo en escucha el servidor
 socketServer.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado");
@@ -70,9 +66,7 @@ socketServer.on("connection", async (socket) => {
 
 //LO NUEVO mongoose
 mongoose
-  .connect(
-    "mongodb+srv://melCoder:melany1234@cluster0.xapkieu.mongodb.net/ecommerce?retryWrites=true&w=majority"
-  )
+  .connect(config.mongoUrl)
   .then(() => {
     console.log("Conectado a la DB");
   })
