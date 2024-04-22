@@ -1,19 +1,16 @@
-import ProductManagerDb from "../dao/mongoDb/productManagerDb.js";
-import userService from "../dao/mongoDb/userManagerDb.js";
-
+import { productService } from "../repositories/repository.config.js";
+import { userService } from "../repositories/repository.config.js";
 class ViewsController {
   constructor() {
-    this.userService = new userService();
-    this.productService = new ProductManagerDb();
+    this.userService = userService;
+    this.productService = productService;
   }
 
   getHome = async (req, res) => {
-    //si no hay un usuario logueado, se redireccionará a login
     if (!req.session?.email) {
       return res.redirect("/logIn");
     }
 
-    // const manager = new ProductManagerDb();
     const products = await this.productService.getProducts();
 
     res.render("home", { products, style: "style.css", session: req.session });
@@ -31,8 +28,15 @@ class ViewsController {
     res.render("productsPaginate", { style: "style.css" });
   };
 
-  getCart = (req, res) => {
-    let cartId = req.params.cartId;
+  getCart = async (req, res) => {
+    if (!req.session?.email) {
+      return res.redirect("/logIn");
+    }
+
+    const user = await this.userService.getUser({ email: req.session.email });
+
+    let cartId = user.cart;
+
     res.render("cartView", { cartId, style: "style.css" });
   };
 
@@ -67,14 +71,20 @@ class ViewsController {
     }
 
     if (req.session.admin === true) {
-      //por el momento redirecciono a home ya que los datos de admin estan hardcodeados como pide la consigna.
       return res.redirect("/");
     }
     const user = await this.userService.getUser({ email: req.session.email });
 
-    // const user = await usersModel.findOne({ email: req.session.email }).lean();
     console.log(req.session.email);
     res.render("profile", { user: user, style: "style.css" });
+  };
+  modifyProduct = async (req, res) => {
+    const prodId = req.params.prodId;
+    const product = await this.productService.getProductById(prodId).lean();
+    res.render("product", { update: true, product });
+  };
+  addProduct = async (req, res) => {
+    res.render("product", { update: false });
   };
 }
 

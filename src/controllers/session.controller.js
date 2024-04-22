@@ -1,4 +1,10 @@
+// import userManagerDb from "../dao/mongoDb/userManagerDb.js";
+import CurrentDTO from "../dao/dto/current.dto.js";
+import { userService } from "../repositories/repository.config.js";
 class SessionController {
+  constructor() {
+    this.userService = userService;
+  }
   login = async (req, res) => {
     if (!req.user)
       return res
@@ -41,12 +47,11 @@ class SessionController {
 
   current = async (req, res) => {
     if (req.session.email) {
-      return res.send({
-        email: req.session.email,
-        admin: req.session.admin,
-        firstName: req.session.first_name,
-        lastName: req.session.last_name,
-      });
+      return res.send(
+        new CurrentDTO(
+          await this.userService.getUser({ email: req.session.email })
+        )
+      );
     } else {
       return res.send({ status: "error", error: "No hay usuario logueado" });
     }

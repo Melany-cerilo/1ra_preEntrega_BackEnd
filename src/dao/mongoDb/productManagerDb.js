@@ -62,6 +62,24 @@ class ProductManagerDb {
       return null;
     }
   }
+  async consumeStockFromProduct(products) {
+    try {
+      const querys = products.map((product) => ({
+        updateOne: {
+          filter: {
+            _id: product.id._id,
+          },
+          update: {
+            $set: { stock: product.id.stock - product.quantity },
+          },
+        },
+      }));
+      await productsModel.bulkWrite(querys);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 }
 
 export default ProductManagerDb;

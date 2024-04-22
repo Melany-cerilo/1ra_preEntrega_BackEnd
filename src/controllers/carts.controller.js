@@ -1,8 +1,16 @@
-import cartManagerDb from "../dao/mongoDb/cartManagerDb.js";
+import { cartService } from "../repositories/repository.config.js";
+import { productService } from "../repositories/repository.config.js";
+import { userService } from "../repositories/repository.config.js";
+import { ticketService } from "../repositories/repository.config.js";
+
+import mongoose from "mongoose";
 
 class CartController {
   constructor() {
-    this.cartService = new cartManagerDb();
+    this.cartService = cartService;
+    this.ticketService = ticketService;
+    this.userService = userService;
+    this.productService = productService;
   }
 
   addCart = async (req, res) => {
@@ -20,9 +28,14 @@ class CartController {
 
   addToCart = async (req, res) => {
     let cartId = req.params.cartId;
+    if (cartId === "session") {
+      const user = await this.userService.getUser({ email: req.session.email });
+      cartId = user.cart;
+    }
     let prodId = req.params.prodId;
     let quantity = parseInt(req.body.quantity);
     let error;
+    let totalQuantity;
     if (!quantity) {
       quantity = 1;
     }
@@ -30,29 +43,45 @@ class CartController {
     if (cart === null) {
       error = "No se encontró carrito para modificar";
     } else {
-      console.log(cart);
-      console.log(prodId);
-      const indexProduct = cart.products.findIndex(
-        (product) => product.id.toString() === prodId
-      );
-      if (indexProduct !== -1) {
-        //Para este caso si se agrega un producto con un ID ya guardado en el carrito seleccionado, solo se sumará la cantidad.
-        cart.products[indexProduct].quantity += quantity;
+      const product = await this.productService.getProductById(prodId);
+      if (!product) {
+        error = "No existe el producto " + prodId;
       } else {
-        //Este caso es el que NO encuentra ID y genera un nuevo objeto en el array de product del carrito seleccionado.
-        const newAdd = {
-          id: prodId,
-          quantity: quantity,
-        };
-        cart.products.push(newAdd);
-      }
-      let resultado = await this.cartService.addtoCart(cartId, cart);
-      if (resultado === null) {
-        error = "Error de sistema";
+        const indexProduct = cart.products.findIndex(
+          (product) => product.id.toString() === prodId
+        );
+        if (indexProduct !== -1) {
+          //Para este caso si se agrega un producto con un ID ya guardado en el carrito seleccionado, solo se sumará la cantidad.
+          cart.products[indexProduct].quantity += quantity;
+          totalQuantity = cart.products[indexProduct].quantity;
+        } else {
+          //Este caso es el que NO encuentra ID y genera un nuevo objeto en el array de product del carrito seleccionado.
+          const newAdd = {
+            id: prodId,
+            quantity: quantity,
+          };
+          cart.products.push(newAdd);
+          totalQuantity = quantity;
+        }
+        if (product.stock < totalQuantity) {
+          error =
+            "No hay suficiente stock" +
+            (totalQuantity - quantity !== 0
+              ? ", ya agregaste " + (totalQuantity - quantity) + " en total"
+              : "");
+        } else {
+          let resultado = await this.cartService.addtoCart(cartId, cart);
+          if (resultado === null) {
+            error = "Error de sistema";
+          }
+        }
       }
     }
     if (!error) {
-      res.send({ status: "success", msg: "Agregaste productos a tu carrito." });
+      res.send({
+        status: "success",
+        msg: "Agregaste " + totalQuantity + " a tu carrito.",
+      });
     } else {
       res.send({ status: "error", msg: error });
     }
@@ -87,34 +116,40 @@ class CartController {
   removeProductFormCart = async (req, res) => {
     let cartId = req.params.cartId;
     let prodId = req.params.prodId;
-    let error;
+    let error = await this.removeProductFormCartFunctional(cartId, prodId);
+    if (!error) {
+      res.send({
+        status: "success",
+        msg: "Producto eliminado de tu carrito",
+      });
+    } else {
+      res.send({ status: "error", msg: error });
+    }
+  };
+
+  removeProductFormCartFunctional = async (cartId, prodId) => {
     let cart = await this.cartService.getCartById(cartId);
     if (cart === null) {
-      error = "No se encontró carrito para modificar";
+      return "No se encontró carrito para modificar";
     } else {
       const indexProduct = cart.products.findIndex(
         (product) => product.id.toString() === prodId
       );
       if (indexProduct === -1) {
-        error = "no se encontro tu producto para eliminar";
+        return "no se encontro tu producto para eliminar";
       } else {
         cart.products.splice(indexProduct, 1);
-        resultado = await this.cartService.removeProductFormCart(cartId, cart);
+        let resultado = await this.cartService.removeProductFormCart(
+          cartId,
+          cart
+        );
         if (resultado.matchedCount === 0) {
-          error = "No se encontró tu busqueda para modificar";
+          return "No se encontró tu busqueda para modificar";
         } else if (resultado.modifiedCount === 0) {
-          error = "No hay cambios ";
+          return "No hay cambios ";
         } else if (resultado === null) {
-          error = "Error de sistema";
+          return "Error de sistema";
         }
-      }
-      if (!error) {
-        res.send({
-          status: "success",
-          msg: "Producto eliminado de tu carrito",
-        });
-      } else {
-        res.send({ status: "error", msg: error });
       }
     }
   };
@@ -217,6 +252,88 @@ class CartController {
     } else {
       res.send({ status: "error", msg: error });
     }
+  };
+
+  removeProductsFromCart = async (cartId, products) => {
+    const resultado = await this.cartService.removeProductsFromCart(
+      cartId,
+      products.map((product) => product.id._id)
+    );
+    if (resultado.matchedCount === 0) {
+      return "No se encontró el carrito para modificar";
+    } else if (resultado.modifiedCount === 0) {
+      return "No hay cambios";
+    } else if (resultado === null) {
+      return "Error de sistema";
+    }
+  };
+
+  cartPurchase = async (req, res) => {
+    let productsOk = [];
+    let productsNotOk = [];
+    let response = {};
+    let cartId = req.params.cartId;
+    let cart = await this.cartService.getCartByIdPopu(cartId);
+    if (cart) {
+      if (cart.products.length !== 0) {
+        //valido stock
+        cart.products.forEach((product) => {
+          if (product.quantity <= product.id.stock) {
+            //hay stock disponible, este producto entra
+            productsOk.push(product);
+          } else {
+            //no hay stock disponible, este producto no entra, lo tengo que devolver
+            productsNotOk.push(product);
+          }
+        });
+
+        if (productsOk.length !== 0) {
+          //genero el ticket
+          let newTicket = {
+            code: new mongoose.Types.ObjectId(),
+            purchase_datetime: new Date(),
+            amount: productsOk.reduce(
+              (acc, product) => (acc += product.quantity * product.id.price),
+              0
+            ),
+            purchaser: req.session.email,
+            products: productsOk.map((product) => ({
+              id: product.id._id,
+              quantity: product.quantity,
+            })),
+          };
+          //create one ticket
+          let result = await this.ticketService.addTicket(newTicket);
+          if (!result._id) {
+            response.status = "error";
+            response.msg = "Error al crear Ticket";
+          } else {
+            response.status = "success";
+            response.msg = "Ticket creado correctamente";
+            response.id = result._id;
+            //borro productos del carrito en MongoDB que ya se compraron
+            await this.removeProductsFromCart(cartId, productsOk);
+            //Descuento stock de productos
+            await this.productService.consumeStockFromProduct(productsOk);
+          }
+        } else {
+          response.status = "error";
+          response.msg = "No hay productos con disponibilidad";
+        }
+
+        if (productsNotOk.length !== 0) {
+          response.productsNotOk = productsNotOk;
+        }
+      } else {
+        response.status = "error";
+        response.msg = "Carrito vacío";
+      }
+    } else {
+      response.status = "error";
+      response.msg = "Carrito no existe";
+    }
+
+    res.send(response);
   };
 }
 

@@ -1,8 +1,7 @@
-import messageManagerDb from "../dao/mongoDb/messageManagerDb.js";
-
+import { messageService } from "../repositories/repository.config.js";
 class MessageController {
   constructor() {
-    this.messageService = new messageManagerDb();
+    this.messageService = messageService;
   }
 
   getMessages = async (req, res) => {

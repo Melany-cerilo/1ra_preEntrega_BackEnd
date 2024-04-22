@@ -2,12 +2,10 @@ import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
 import { createHash, isValidPassword } from "../utils.js";
-import cartManagerDb from "../dao/mongoDb/cartManagerDb.js";
-import userManagerDb from "../dao/mongoDb/userManagerDb.js";
 import config from "./config.js";
+import { userService } from "../repositories/repository.config.js";
+import { cartService } from "../repositories/repository.config.js";
 const localStrategy = local.Strategy;
-
-const userService = new userManagerDb();
 
 const initializePassport = () => {
   passport.use(
@@ -18,13 +16,11 @@ const initializePassport = () => {
         const { first_name, last_name, email, age } = req.body;
         try {
           let user = await userService.getUser({ email: username });
-          // let user = await usersModel.findOne({ email: username });
           if (user) {
             console.log("El usuario ya existe");
             return done(null, false);
           }
-          const manager = new cartManagerDb();
-          let cartId = await manager.addCart();
+          let cartId = await cartService.addCart();
           const newUser = {
             first_name,
             last_name,
@@ -35,7 +31,6 @@ const initializePassport = () => {
           };
           console.log(cartId);
           let result = await userService.createUser(newUser);
-          // let result = await usersModel.create(newUser);
           return done(null, result);
         } catch (error) {
           return done("Error al obtener usuario: " + error);
@@ -57,10 +52,9 @@ const initializePassport = () => {
           let user = await userService.getUser({
             email: profile._json.email,
           });
-          // let user = await usersModel.findOne({ email: profile._json.email });
+
           if (!user) {
-            const manager = new cartManagerDb();
-            let cartId = await manager.addCart();
+            let cartId = await cartService.addCart();
             let newUser = {
               first_name: profile._json.name,
               last_name: " ",
@@ -71,7 +65,7 @@ const initializePassport = () => {
             };
             console.log(cartId);
             let result = await userService.createUser(newUser);
-            // let result = await usersModel.create(newUser);
+
             done(null, result);
           } else {
             done(null, user);
@@ -102,7 +96,6 @@ const initializePassport = () => {
       done(null, user);
     } else {
       let user = await userService.getUserById(id);
-      // let user = await usersModel.findById(id);
 
       done(null, user);
     }
@@ -129,7 +122,7 @@ const initializePassport = () => {
           } else {
             // Usuario normal
             let user = await userService.getUser({ email: username });
-            // let user = await usersModel.findOne({ email: username });
+
             if (!user) {
               console.log("Usuario inexistente");
               return done(null, false);

@@ -1,8 +1,8 @@
-import ProductManagerDb from "../dao/mongoDb/productManagerDb.js";
 import socketServer from "../app.js";
+import { productService } from "../repositories/repository.config.js";
 class productController {
   constructor() {
-    this.productsService = new ProductManagerDb();
+    this.productsService = productService;
   }
 
   getProducts = async (req, res) => {

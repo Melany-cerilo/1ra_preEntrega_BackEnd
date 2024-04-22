@@ -1,6 +1,6 @@
 import Express from "express";
 import productController from "../controllers/products.controller.js";
-
+import { authorization } from "../config/authorization.js";
 const router = Express.Router();
 const productsController = new productController();
 
@@ -15,12 +15,24 @@ router.get("/api/products", productsController.getProducts);
 router.get("/api/products/:idProduct", productsController.getProductById);
 
 //servicio para agregar un producto
-router.post("/api/products", productsController.createProduct);
+router.post(
+  "/api/products",
+  authorization("admin"),
+  productsController.createProduct
+);
 
 //servicio para actualizar un producto
-router.put("/api/products/:idProduct", productsController.updateProduct);
+router.put(
+  "/api/products/:idProduct",
+  authorization("admin"),
+  productsController.updateProduct
+);
 
 //servicio para eliminar un producto buscandolo por ID que se envia por parametro
-router.delete("/api/products/:idProduct", productsController.deleteProduct);
+router.delete(
+  "/api/products/:idProduct",
+  authorization("admin"),
+  productsController.deleteProduct
+);
 
 export default router;

@@ -65,6 +65,18 @@ class cartManagerDb {
     }
   }
 
+  async removeProductsFromCart(cartId, productKeys) {
+    try {
+      return await cartsModel.updateOne(
+        { _id: cartId },
+        { $pull: { products: { id: { $in: productKeys } } } }
+      );
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
   async updateCart(cartId, cart) {
     try {
       return await cartsModel.updateOne({ _id: cartId }, cart);
