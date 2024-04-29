@@ -11,6 +11,7 @@ import initializePassport from "./config/passport.config.js";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
+import errorHandler from "./config/errorMiddleware.js";
 const app = Express();
 const PORT = 8080;
 
@@ -53,6 +54,9 @@ app.use(passport.session());
 
 //configuracion de rutas
 app.use(appRouter);
+
+//Manejo de errores
+app.use(errorHandler);
 
 //dejo en escucha el servidor
 socketServer.on("connection", async (socket) => {

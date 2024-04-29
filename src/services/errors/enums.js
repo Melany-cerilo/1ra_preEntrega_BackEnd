@@ -1,0 +1,9 @@
+const EErrors = {
+  ROUTING_ERROR: 1,
+  PROPERTY_MISSING_ERROR: 2,
+  DATABASE_ERROR: 3,
+  PRODUCT_CODE_DUPLICATE: 4,
+  PRODUCT_NOT_FOUND: 5,
+};
+
+export default EErrors;

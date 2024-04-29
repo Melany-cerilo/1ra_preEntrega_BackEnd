@@ -1,5 +1,14 @@
 import socketServer from "../app.js";
 import { productService } from "../repositories/repository.config.js";
+import CustomError from "../services/errors/CustomError.js";
+import EErrors from "../services/errors/enums.js";
+import {
+  generateDataBaseInfo,
+  generateProductCodeDuplicateInfo,
+  generateProductPropertyMissingInfo,
+  generateProductNotFoundInfo,
+} from "../services/errors/info.js";
+
 class productController {
   constructor() {
     this.productsService = productService;
@@ -81,122 +90,180 @@ class productController {
     }
   };
 
-  createProduct = async (req, res) => {
-    let error;
-    let resultado;
-    if (
-      !req.body.title ||
-      !req.body.description ||
-      !req.body.price ||
-      !req.body.code ||
-      !req.body.stock ||
-      !req.body.category
-    ) {
-      error = "Ingresar todos los campos.";
-    } else {
-      const product = await this.productsService.getProductByCode(
-        req.body.code
-      );
-      if (product) {
-        error = "Error. Codigo repetido";
+  createProduct = async (req, res, next) => {
+    try {
+      let error;
+      let resultado;
+      if (
+        !req.body.title ||
+        !req.body.description ||
+        !req.body.price ||
+        !req.body.code ||
+        !req.body.stock ||
+        !req.body.category
+      ) {
+        // error = "Ingresar todos los campos.";
+
+        CustomError.createError({
+          message: "Error creando el producto",
+          cause: generateProductPropertyMissingInfo(req.body),
+          code: EErrors.PROPERTY_MISSING_ERROR,
+        });
       } else {
-        const newProduct = {
-          title: req.body.title,
-          description: req.body.description,
-          price: req.body.price,
-          code: req.body.code,
-          stock: req.body.stock,
-          category: req.body.category,
-          status: true,
-        };
-        resultado = await this.productsService.addProduct(newProduct);
-        if (resultado === null) {
-          error = "Error de sistema";
+        const product = await this.productsService.getProductByCode(
+          req.body.code
+        );
+        if (product) {
+          // error = "Error. Codigo repetido";
+
+          CustomError.createError({
+            message: "Error creando el producto",
+            cause: generateProductCodeDuplicateInfo(req.body.code),
+            code: EErrors.PRODUCT_CODE_DUPLICATE,
+          });
+        } else {
+          const newProduct = {
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            code: req.body.code,
+            stock: req.body.stock,
+            category: req.body.category,
+            status: true,
+          };
+          resultado = await this.productsService.addProduct(newProduct);
+          if (resultado === null) {
+            CustomError.createError({
+              message: "Error creando el producto",
+              cause: generateDataBaseInfo(),
+              code: EErrors.DATABASE_ERROR,
+            });
+            // error = "Error de sistema";
+          }
         }
       }
-    }
-    if (!error) {
-      res.send({
-        status: "success",
-        msg: "Producto agregado",
-        _id: resultado.id,
-      });
-      socketServer.emit(
-        "product_change",
-        await this.productsService.getProducts()
-      );
-    } else {
-      res.send({
-        status: "error",
-        msg: "Error al agregar producto: " + error,
-      });
-    }
-  };
-
-  getProductById = async (req, res) => {
-    let idProduct = req.params.idProduct;
-    let product = await this.productsService.getProductById(idProduct);
-    if (!product) {
-      res.send({ status: "error", msg: "No se encuentra el producto" });
-    } else {
-      res.send({ status: "success", payload: product });
-    }
-  };
-
-  updateProduct = async (req, res) => {
-    let idProduct = req.params.idProduct;
-    let error;
-    if (
-      !req.body.title ||
-      !req.body.description ||
-      !req.body.price ||
-      !req.body.code ||
-      !req.body.stock ||
-      !req.body.category
-    ) {
-      error = "Ingresar todos los campos.";
-    } else {
-      let resultado = await this.productsService.updateProduct(
-        req.body,
-        idProduct
-      );
-      if (resultado.matchedCount === 0) {
-        error = "No se encontró producto para modificar";
-      } else if (resultado.modifiedCount === 0) {
-        error = "No hay cambios en el producto enviado";
-      } else if (resultado === null) {
-        error = "Error de sistema";
+      if (!error) {
+        res.send({
+          status: "success",
+          msg: "Producto agregado",
+          _id: resultado.id,
+        });
+        socketServer.emit(
+          "product_change",
+          await this.productsService.getProducts()
+        );
+      } else {
+        res.send({
+          status: "error",
+          msg: "Error al agregar producto: " + error,
+        });
       }
-    }
-
-    if (!error) {
-      res.send({ status: "success", msg: "Producto modificado" });
-      socketServer.emit(
-        "product_change",
-        await this.productsService.getProducts()
-      );
-    } else {
-      res.send({ status: "error", msg: error });
+    } catch (error) {
+      next(error);
     }
   };
 
-  deleteProduct = async (req, res) => {
-    let idProduct = req.params.idProduct;
-    let error;
-    let resultado = await this.productsService.deleteProduct(idProduct);
-    if (resultado.deletedCount === 0) {
-      error = "No se encontró producto para eliminar";
-    } else if (resultado === null) {
-      error = "Error de sistema";
+  getProductById = async (req, res, next) => {
+    try {
+      let idProduct = req.params.idProduct;
+      let product = await this.productsService.getProductById(idProduct);
+      if (!product) {
+        CustomError.createError({
+          message: "Error buscando el producto",
+          cause: generateProductNotFoundInfo(),
+          code: EErrors.PRODUCT_NOT_FOUND,
+        });
+        // res.send({ status: "error", msg: "No se encuentra el producto" });
+      } else {
+        res.send({ status: "success", payload: product });
+      }
+    } catch (error) {
+      next(error);
     }
-    if (!error) {
-      res.send({ status: "success", msg: "Producto eliminado" });
-      socketServer.emit(
-        "product_change",
-        await this.productsService.getProducts()
-      );
-    } else {
-      res.send({ status: "error", msg: error });
+  };
+
+  updateProduct = async (req, res, next) => {
+    try {
+      let idProduct = req.params.idProduct;
+      let error;
+      if (
+        !req.body.title ||
+        !req.body.description ||
+        !req.body.price ||
+        !req.body.code ||
+        !req.body.stock ||
+        !req.body.category
+      ) {
+        CustomError.createError({
+          message: "Error actualizando el producto",
+          cause: generateProductPropertyMissingInfo(req.body),
+          code: EErrors.PROPERTY_MISSING_ERROR,
+        });
+        // error = "Ingresar todos los campos.";
+      } else {
+        let resultado = await this.productsService.updateProduct(
+          req.body,
+          idProduct
+        );
+        if (resultado.matchedCount === 0) {
+          error = "No se encontró producto para modificar";
+        } else if (resultado.modifiedCount === 0) {
+          error = "No hay cambios en el producto enviado";
+        } else if (resultado === null) {
+          CustomError.createError({
+            message: "Error actualizando el producto",
+            cause: generateDataBaseInfo(),
+            code: EErrors.DATABASE_ERROR,
+          });
+          // error = "Error de sistema";
+        }
+      }
+
+      if (!error) {
+        res.send({ status: "success", msg: "Producto modificado" });
+        socketServer.emit(
+          "product_change",
+          await this.productsService.getProducts()
+        );
+      } else {
+        res.send({ status: "error", msg: error });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  deleteProduct = async (req, res, next) => {
+    try {
+      let idProduct = req.params.idProduct;
+      let error;
+      let resultado = await this.productsService.deleteProduct(idProduct);
+      if (resultado.deletedCount === 0) {
+        CustomError.createError({
+          message: "Error eliminando el producto",
+          cause: generateProductNotFoundInfo(),
+          code: EErrors.PRODUCT_NOT_FOUND,
+        });
+        // error = "No se encontró producto para eliminar";
+      } else if (resultado === null) {
+        CustomError.createError({
+          message: "Error eliminando el producto",
+          cause: generateDataBaseInfo(),
+          code: EErrors.DATABASE_ERROR,
+        });
+        // error = "Error de sistema";
+      }
+      if (!error) {
+        res.send({ status: "success", msg: "Producto eliminado" });
+        socketServer.emit(
+          "product_change",
+          await this.productsService.getProducts()
+        );
+      } else {
+        res.send({ status: "error", msg: error });
+      }
+    } catch (error) {
+      next(error);
     }
   };
 }
