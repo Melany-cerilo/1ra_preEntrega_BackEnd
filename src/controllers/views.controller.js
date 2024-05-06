@@ -1,5 +1,7 @@
 import { productService } from "../repositories/repository.config.js";
 import { userService } from "../repositories/repository.config.js";
+import fs from "fs";
+
 class ViewsController {
   constructor() {
     this.userService = userService;
@@ -74,8 +76,6 @@ class ViewsController {
       return res.redirect("/");
     }
     const user = await this.userService.getUser({ email: req.session.email });
-
-    console.log(req.session.email);
     res.render("profile", { user: user, style: "style.css" });
   };
   modifyProduct = async (req, res) => {
@@ -85,6 +85,15 @@ class ViewsController {
   };
   addProduct = async (req, res) => {
     res.render("product", { update: false });
+  };
+
+  loggerTest = async (req, res) => {
+    try {
+      const errorFile = fs.readFileSync("./errors.log", "utf8");
+      res.render("loggerView", { errorFile: errorFile });
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
 

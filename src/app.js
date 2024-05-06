@@ -1,4 +1,5 @@
 import Express from "express";
+import { addLogger, logger } from "./logger/logger_entorno.js";
 import mongoose from "mongoose";
 import appRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
@@ -12,6 +13,7 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
 import errorHandler from "./config/errorMiddleware.js";
+
 const app = Express();
 const PORT = 8080;
 
@@ -29,7 +31,8 @@ app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 
 app.set("view engine", "handlebars");
-
+//logger
+app.use(addLogger);
 app.use(Express.static(__dirname + "/public"));
 
 //Middlewares
@@ -60,7 +63,7 @@ app.use(errorHandler);
 
 //dejo en escucha el servidor
 socketServer.on("connection", async (socket) => {
-  console.log("Nuevo cliente conectado");
+  logger.info("Nuevo cliente conectado");
 
   //instancio manager para emitir a la primera los productos del archivo de products.
   const manager = new ProductManagerDb();
@@ -72,10 +75,10 @@ socketServer.on("connection", async (socket) => {
 mongoose
   .connect(config.mongoUrl)
   .then(() => {
-    console.log("Conectado a la DB");
+    logger.info("Conectado a la DB");
   })
   .catch((error) => {
-    console.error("Error al conectarse con la DB", error);
+    logger.error("Error al conectarse con la DB", error);
   });
 
 //exporto socketserver para poder usarlo en los router.

@@ -1,7 +1,7 @@
 import EErrors from "../services/errors/enums.js";
 
 export default (error, req, res, next) => {
-  console.error(error.code);
+  req.logger.debug("Datos de error en middleware: " + error);
 
   switch (error.code) {
     case EErrors.PROPERTY_MISSING_ERROR:

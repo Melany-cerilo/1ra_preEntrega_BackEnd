@@ -1,0 +1,10 @@
+{"level":"error","message":" Error!!! Error creando el producto: Código 8 ya existe en base de datos, POST en /api/products/ - 6/5/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/65df582771c4efd780696803 - 6/5/2024"}
+{"level":"error","message":" Error!!! Error actualizando el producto: Una o más propiedades estaban incompletas\n      Lista de propiedades requeridas:\n      * title: Se recibió \n      * description: Se recibió de sol\n      * price: Se recibió 90000\n      * code: Se recibió 12\n      * stock: Se recibió 0\n      * category: Se recibió calzado\n     , PUT en /api/products/65df57fa71c4efd7806967fc - 6/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/65df5f3abbbff71450c5ee8f - 6/5/2024"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":" Error!!! Error creando el producto: Una o más propiedades estaban incompletas\n      Lista de propiedades requeridas:\n      * title: Se recibió \n      * description: Se recibió la mejor\n      * price: Se recibió 13000\n      * code: Se recibió 555\n      * stock: Se recibió 1\n      * category: Se recibió ropa\n     , POST en /api/products/ - 6/5/2024"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 8 ya existe en base de datos, POST en /api/products/ - 6/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6639156eaf41962dabd491a5 - 6/5/2024"}

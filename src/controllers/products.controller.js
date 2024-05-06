@@ -104,7 +104,7 @@ class productController {
       ) {
         // error = "Ingresar todos los campos.";
 
-        CustomError.createError({
+        CustomError.createError(req, {
           message: "Error creando el producto",
           cause: generateProductPropertyMissingInfo(req.body),
           code: EErrors.PROPERTY_MISSING_ERROR,
@@ -116,7 +116,7 @@ class productController {
         if (product) {
           // error = "Error. Codigo repetido";
 
-          CustomError.createError({
+          CustomError.createError(req, {
             message: "Error creando el producto",
             cause: generateProductCodeDuplicateInfo(req.body.code),
             code: EErrors.PRODUCT_CODE_DUPLICATE,
@@ -133,7 +133,7 @@ class productController {
           };
           resultado = await this.productsService.addProduct(newProduct);
           if (resultado === null) {
-            CustomError.createError({
+            CustomError.createError(req, {
               message: "Error creando el producto",
               cause: generateDataBaseInfo(),
               code: EErrors.DATABASE_ERROR,
@@ -168,7 +168,7 @@ class productController {
       let idProduct = req.params.idProduct;
       let product = await this.productsService.getProductById(idProduct);
       if (!product) {
-        CustomError.createError({
+        CustomError.createError(req, {
           message: "Error buscando el producto",
           cause: generateProductNotFoundInfo(),
           code: EErrors.PRODUCT_NOT_FOUND,
@@ -194,7 +194,7 @@ class productController {
         !req.body.stock ||
         !req.body.category
       ) {
-        CustomError.createError({
+        CustomError.createError(req, {
           message: "Error actualizando el producto",
           cause: generateProductPropertyMissingInfo(req.body),
           code: EErrors.PROPERTY_MISSING_ERROR,
@@ -210,7 +210,7 @@ class productController {
         } else if (resultado.modifiedCount === 0) {
           error = "No hay cambios en el producto enviado";
         } else if (resultado === null) {
-          CustomError.createError({
+          CustomError.createError(req, {
             message: "Error actualizando el producto",
             cause: generateDataBaseInfo(),
             code: EErrors.DATABASE_ERROR,
@@ -239,14 +239,14 @@ class productController {
       let error;
       let resultado = await this.productsService.deleteProduct(idProduct);
       if (resultado.deletedCount === 0) {
-        CustomError.createError({
+        CustomError.createError(req, {
           message: "Error eliminando el producto",
           cause: generateProductNotFoundInfo(),
           code: EErrors.PRODUCT_NOT_FOUND,
         });
         // error = "No se encontró producto para eliminar";
       } else if (resultado === null) {
-        CustomError.createError({
+        CustomError.createError(req, {
           message: "Error eliminando el producto",
           cause: generateDataBaseInfo(),
           code: EErrors.DATABASE_ERROR,

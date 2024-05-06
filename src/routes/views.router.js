@@ -39,4 +39,6 @@ router.get(
 );
 //
 router.get("/addProduct", authorization("admin"), viewsController.addProduct);
+
+router.get("/loggerTest", viewsController.loggerTest);
 export default router;

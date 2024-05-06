@@ -5,6 +5,7 @@ import { createHash, isValidPassword } from "../utils.js";
 import config from "./config.js";
 import { userService } from "../repositories/repository.config.js";
 import { cartService } from "../repositories/repository.config.js";
+import { logger } from "../logger/logger_entorno.js";
 const localStrategy = local.Strategy;
 
 const initializePassport = () => {
@@ -29,8 +30,9 @@ const initializePassport = () => {
             password: createHash(password),
             cart: cartId,
           };
-          console.log(cartId);
+          logger.debug(newUser);
           let result = await userService.createUser(newUser);
+          logger.debug(result);
           return done(null, result);
         } catch (error) {
           return done("Error al obtener usuario: " + error);
@@ -63,9 +65,9 @@ const initializePassport = () => {
               password: " ",
               cart: cartId,
             };
-            console.log(cartId);
+            logger.debug(newUser);
             let result = await userService.createUser(newUser);
-
+            logger.debug(result);
             done(null, result);
           } else {
             done(null, user);
@@ -124,11 +126,13 @@ const initializePassport = () => {
             let user = await userService.getUser({ email: username });
 
             if (!user) {
-              console.log("Usuario inexistente");
+              logger.info("Usuario inexistente");
+              logger.debug("No se encontro el user: " + username);
               return done(null, false);
             }
             if (!isValidPassword(user, password)) return done(null, false);
             user.admin = false;
+
             return done(null, user);
           }
         } catch (error) {

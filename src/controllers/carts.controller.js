@@ -16,6 +16,7 @@ class CartController {
   addCart = async (req, res) => {
     let resultado = await this.cartService.addCart();
     if (!resultado._id) {
+      req.logger.debug("resultado de addCart fallido" + " " + resultado);
       res.send({ status: "error", msg: `No se pudo crear el carrito` });
     } else {
       res.send({
@@ -83,6 +84,7 @@ class CartController {
         msg: "Agregaste " + totalQuantity + " a tu carrito.",
       });
     } else {
+      req.logger.error(error);
       res.send({ status: "error", msg: error });
     }
   };
@@ -93,9 +95,11 @@ class CartController {
     if (cart) {
       res.send({ status: "success", payload: cart });
     } else {
+      let error = `No se encontró carrito con Id: ${cartId}`;
+      req.logger.error(error);
       res.send({
         status: "error",
-        msg: `No se encontró carrito con Id: ${cartId}`,
+        msg: error,
       });
     }
   };
@@ -109,7 +113,9 @@ class CartController {
         payload: carts,
       });
     } else {
-      res.send({ status: "error", msg: "No se encontraron carritos" });
+      let error = "No se encontraron carritos";
+      req.logger.error(error);
+      res.send({ status: "error", msg: error });
     }
   };
 
@@ -123,6 +129,7 @@ class CartController {
         msg: "Producto eliminado de tu carrito",
       });
     } else {
+      req.logger.error(error);
       res.send({ status: "error", msg: error });
     }
   };
@@ -180,6 +187,7 @@ class CartController {
         msg: "Carrito modificado con productos nuevos",
       });
     } else {
+      req.logger.error(error);
       res.send({ status: "error", msg: error });
     }
   };
@@ -216,6 +224,7 @@ class CartController {
         msg: "Quantity de tu producto modificado",
       });
     } else {
+      req.logger.error(error);
       res.send({ status: "error", msg: error });
     }
   };
@@ -250,6 +259,7 @@ class CartController {
         msg: "Productos eliminados de tu carrito",
       });
     } else {
+      req.logger.error(error);
       res.send({ status: "error", msg: error });
     }
   };

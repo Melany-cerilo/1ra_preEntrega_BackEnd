@@ -1,5 +1,16 @@
 #Proyecto integrador
 
+-Uso de loggers.
+-Se muestra como se ven por consola los niveles debug y info desde el entorno DEV.
+![debug_info_ent_dev](./capturas/debug%20y%20info%20en%20entorno%20dev.png)
+
+-Se muestra como se ven por consola los info desde el entorno PROD.
+![info_ent_prod](./capturas/info%20en%20entorno%20prod.png)
+-Se muestra desde el endpoint /loggerTest los errors almacenados.
+![loggertest](./capturas/ruta%20loggertest.png)
+-Flujo desde consola.
+![loggertest_consola](./capturas/flujo%20de%20errores%20entorno%20prod.png)
+
 -Se agregan los requerimientos para la 3er pre entrega. Video explicativo
 https://www.loom.com/share/a141ecb8ba774e8588866ea277685725?sid=669da11f-7eea-4290-97bd-221492a91dc0
 

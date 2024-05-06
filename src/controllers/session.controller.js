@@ -1,6 +1,7 @@
 // import userManagerDb from "../dao/mongoDb/userManagerDb.js";
 import CurrentDTO from "../dao/dto/current.dto.js";
 import { userService } from "../repositories/repository.config.js";
+import { logger } from "../logger/logger_entorno.js";
 class SessionController {
   constructor() {
     this.userService = userService;
@@ -14,6 +15,7 @@ class SessionController {
     req.session.admin = req.user.admin;
     req.session.firstName = req.user.first_name;
     req.session.lastName = req.user.last_name;
+    logger.info("Se loguea el usuario: " + req.session.email);
     return res.redirect("/");
   };
 
@@ -42,6 +44,7 @@ class SessionController {
     req.session.admin = req.user.admin;
     req.session.firstName = req.user.first_name;
     req.session.lastName = req.user.last_name;
+    logger.info("Se loguea el usuario: " + req.session.email);
     res.redirect("/");
   };
 
