@@ -17,21 +17,21 @@ router.get("/api/products/:idProduct", productsController.getProductById);
 //servicio para agregar un producto
 router.post(
   "/api/products",
-  authorization("admin"),
+  authorization(["admin", "premium"]),
   productsController.createProduct
 );
 
 //servicio para actualizar un producto
 router.put(
   "/api/products/:idProduct",
-  authorization("admin"),
+  authorization(["admin"]),
   productsController.updateProduct
 );
 
 //servicio para eliminar un producto buscandolo por ID que se envia por parametro
 router.delete(
   "/api/products/:idProduct",
-  authorization("admin"),
+  authorization(["admin", "premium"]),
   productsController.deleteProduct
 );
 

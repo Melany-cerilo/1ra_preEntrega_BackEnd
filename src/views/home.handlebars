@@ -8,14 +8,12 @@
 
 <div class="user-info">
   <h1>Bienvenido, {{session.firstName}} {{session.lastName}}</h1>
-  {{#if session.admin}}
-    <h1>Rol: Administrador</h1>
-              <a href="/addProduct/{{this._id}}"
+    <h1>Rol: {{roleText}}</h1>
+  {{#if creator}}
+    <a href="/addProduct/{{this._id}}"
                 id="{{this._id}}"
                 class="productMod btn btn-primary"
               >Agregar producto</a>
-  {{else}}
-    <h1>Rol: Usuario</h1>
   {{/if}}
 </div>
 <div class="container d-flex justify-content-center mt-4">
@@ -32,18 +30,22 @@
             <p class="card-text">Categoria: {{this.category}}</p>
             <p class="card-text">Status: {{this.status}}</p>
             <p class="card-text">Codigo: {{this.code}}</p>
-            {{#if ../session.admin}}
+            {{#if ../creator}}
               <a href="/modifyProduct/{{this._id}}"
                 class="productMod btn btn-primary"
               >Modificar producto</a>
               <div  id="{{this._id}}" class="productDel btn btn-danger">Eliminar
-                producto</div>
+                producto</div><br>
               <div id="{{this._id}}" class="resultText"></div>
+            {{/if}}
+
+            {{#if ../admin}}
             {{else}}
               <div id="{{this._id}}" class="productAdd btn btn-primary">Agregar
                 al carrito</div>
               <div id="{{this._id}}" class="stockText"></div>
             {{/if}}
+
           </div>
         </div>
       </div>

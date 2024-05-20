@@ -39,6 +39,14 @@ router.get(
 );
 
 //Servicio para devolver en una respuesta el usuario actual.
-router.get("/api/session/current", sessionController.current);
+router.get("/api/sessions/current", sessionController.current);
 
+router.post(
+  "/api/sessions/restorePasswordMail",
+  sessionController.restorePasswordMail
+);
+router.get(
+  "/api/sessions/restorePassword/:token",
+  sessionController.restorePassword
+);
 export default router;

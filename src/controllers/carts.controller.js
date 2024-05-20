@@ -48,32 +48,39 @@ class CartController {
       if (!product) {
         error = "No existe el producto " + prodId;
       } else {
-        const indexProduct = cart.products.findIndex(
-          (product) => product.id.toString() === prodId
-        );
-        if (indexProduct !== -1) {
-          //Para este caso si se agrega un producto con un ID ya guardado en el carrito seleccionado, solo se sumará la cantidad.
-          cart.products[indexProduct].quantity += quantity;
-          totalQuantity = cart.products[indexProduct].quantity;
+        if (
+          req.session.role === "premium" &&
+          product.owner === req.session.email
+        ) {
+          error = "No tiene permisos para agregar un producto creado por usted";
         } else {
-          //Este caso es el que NO encuentra ID y genera un nuevo objeto en el array de product del carrito seleccionado.
-          const newAdd = {
-            id: prodId,
-            quantity: quantity,
-          };
-          cart.products.push(newAdd);
-          totalQuantity = quantity;
-        }
-        if (product.stock < totalQuantity) {
-          error =
-            "No hay suficiente stock" +
-            (totalQuantity - quantity !== 0
-              ? ", ya agregaste " + (totalQuantity - quantity) + " en total"
-              : "");
-        } else {
-          let resultado = await this.cartService.addtoCart(cartId, cart);
-          if (resultado === null) {
-            error = "Error de sistema";
+          const indexProduct = cart.products.findIndex(
+            (product) => product.id.toString() === prodId
+          );
+          if (indexProduct !== -1) {
+            //Para este caso si se agrega un producto con un ID ya guardado en el carrito seleccionado, solo se sumará la cantidad.
+            cart.products[indexProduct].quantity += quantity;
+            totalQuantity = cart.products[indexProduct].quantity;
+          } else {
+            //Este caso es el que NO encuentra ID y genera un nuevo objeto en el array de product del carrito seleccionado.
+            const newAdd = {
+              id: prodId,
+              quantity: quantity,
+            };
+            cart.products.push(newAdd);
+            totalQuantity = quantity;
+          }
+          if (product.stock < totalQuantity) {
+            error =
+              "No hay suficiente stock" +
+              (totalQuantity - quantity !== 0
+                ? ", ya agregaste " + (totalQuantity - quantity) + " en total"
+                : "");
+          } else {
+            let resultado = await this.cartService.addtoCart(cartId, cart);
+            if (resultado === null) {
+              error = "Error de sistema";
+            }
           }
         }
       }

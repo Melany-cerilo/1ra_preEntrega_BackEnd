@@ -8,3 +8,16 @@
 {"level":"error","message":" Error!!! Error creando el producto: Una o más propiedades estaban incompletas\n      Lista de propiedades requeridas:\n      * title: Se recibió \n      * description: Se recibió la mejor\n      * price: Se recibió 13000\n      * code: Se recibió 555\n      * stock: Se recibió 1\n      * category: Se recibió ropa\n     , POST en /api/products/ - 6/5/2024"}
 {"level":"error","message":" Error!!! Error creando el producto: Código 8 ya existe en base de datos, POST en /api/products/ - 6/5/2024"}
 {"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6639156eaf41962dabd491a5 - 6/5/2024"}
+{"level":"error","message":"No tiene permisos para agregar un producto creado por usted"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":"No tiene permisos para agregar un producto creado por usted"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":"No hay suficiente stock, ya agregaste 1 en total"}
+{"level":"error","message":"No hay suficiente stock"}
+{"level":"error","message":"No tiene permisos para agregar un producto creado por usted"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}

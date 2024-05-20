@@ -13,6 +13,14 @@ class UserRepository {
   async createUser(newUser) {
     return await this.dao.createUser(newUser);
   }
+
+  async makeUserPremium(email) {
+    return await this.dao.makeUserPremium(email);
+  }
+
+  async updatePassword(email, password) {
+    return await this.dao.updatePassword(email, password);
+  }
 }
 
 export default UserRepository;

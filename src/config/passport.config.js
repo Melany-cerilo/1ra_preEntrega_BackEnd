@@ -29,6 +29,7 @@ const initializePassport = () => {
             age,
             password: createHash(password),
             cart: cartId,
+            role: "user",
           };
           logger.debug(newUser);
           let result = await userService.createUser(newUser);
@@ -64,6 +65,7 @@ const initializePassport = () => {
               email: profile._json.email,
               password: " ",
               cart: cartId,
+              role: "user",
             };
             logger.debug(newUser);
             let result = await userService.createUser(newUser);
@@ -80,7 +82,7 @@ const initializePassport = () => {
   );
 
   passport.serializeUser((user, done) => {
-    if (user.admin === false) {
+    if (user.role !== "admin") {
       done(null, user._id);
     } else {
       done(null, "admin");
@@ -92,7 +94,7 @@ const initializePassport = () => {
         email: config.adminEmail,
         first_name: "Administrador",
         last_name: "Coder",
-        admin: true,
+        role: "admin",
       };
 
       done(null, user);
@@ -118,7 +120,7 @@ const initializePassport = () => {
               email: config.adminEmail,
               first_name: "Administrador",
               last_name: "Coder",
-              admin: true,
+              role: "admin",
             };
             return done(null, user);
           } else {
@@ -131,7 +133,6 @@ const initializePassport = () => {
               return done(null, false);
             }
             if (!isValidPassword(user, password)) return done(null, false);
-            user.admin = false;
 
             return done(null, user);
           }

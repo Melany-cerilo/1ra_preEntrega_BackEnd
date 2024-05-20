@@ -12,15 +12,23 @@ router.get("/", viewsController.getHome);
 //este servicio devuelve al cliente una vista que actualiza sola en tiempo real los productos mediante js con websocket.
 router.get(
   "/realTimeProducts",
-  authorization("admin"),
+  authorization(["admin"]),
   viewsController.realTimeProducts
 );
 //este servicio devuelve al cliente una vista con un formulario.
-router.get("/message", authorization("user"), viewsController.getMessage);
+router.get(
+  "/message",
+  authorization(["user", "premium"]),
+  viewsController.getMessage
+);
 //este servicio devuelve al cliente una vista con los productos.
 router.get("/productsPaginate", viewsController.productsPaginate);
 //este servicio devuelve al cliente una vista con el carrito seleccionado y sus productos.
-router.get("/cartView", authorization("user"), viewsController.getCart);
+router.get(
+  "/cartView",
+  authorization(["user", "premium"]),
+  viewsController.getCart
+);
 // servicio para la vista de login
 router.get("/logIn", viewsController.logIn);
 //servicio que devuelve la vista del formulario del registro
@@ -34,11 +42,17 @@ router.get("/profile", viewsController.profile);
 //
 router.get(
   "/modifyProduct/:prodId",
-  authorization("admin"),
+  authorization(["admin"]),
   viewsController.modifyProduct
 );
 //
-router.get("/addProduct", authorization("admin"), viewsController.addProduct);
+router.get(
+  "/addProduct",
+  authorization(["admin", "premium"]),
+  viewsController.addProduct
+);
 
 router.get("/loggerTest", viewsController.loggerTest);
+router.get("/restorePasswordMail", viewsController.restorePasswordEmail);
+router.get("/restorePassword", viewsController.restorePassword);
 export default router;

@@ -9,27 +9,27 @@ const messageController = new MessageController();
 //servicio para traer todos los mensajes de la colección de mensajes de la DB
 router.get(
   "/api/message",
-  authorization("user"),
+  authorization(["user", "premium"]),
   messageController.getMessages
 );
 
 //servicio para traer un mensaje un mensaje por ID
 router.get(
   "/api/message/:idMessage",
-  authorization("user"),
+  authorization(["user", "premium"]),
   messageController.getMesaggesById
 );
 //servicio para agregar un mensaje a la colección de mensajes en la DB
 router.post(
   "/api/message",
-  authorization("user"),
+  authorization(["user", "premium"]),
   messageController.addMessage
 );
 
 //servicio para eliminar un mensaje de la colección de mensajes
 router.delete(
   "/api/message/:idMessage",
-  authorization("user"),
+  authorization(["user", "premium"]),
   messageController.deleteMessage
 );
 

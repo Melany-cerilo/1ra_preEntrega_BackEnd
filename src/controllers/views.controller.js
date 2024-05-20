@@ -9,13 +9,31 @@ class ViewsController {
   }
 
   getHome = async (req, res) => {
-    if (!req.session?.email) {
+    if (!req.session?.role) {
       return res.redirect("/logIn");
     }
 
     const products = await this.productService.getProducts();
-
-    res.render("home", { products, style: "style.css", session: req.session });
+    let roleText = "Usuario";
+    switch (req.session.role) {
+      case "admin":
+        roleText = "Administrador";
+        break;
+      case "premium":
+        roleText = "Usuario Premium";
+        break;
+    }
+    res.render("home", {
+      products,
+      style: "style.css",
+      session: req.session,
+      admin: req.session.role === "admin" ? true : false,
+      creator:
+        req.session.role === "admin" || req.session.role === "premium"
+          ? true
+          : false,
+      roleText,
+    });
   };
 
   realTimeProducts = (req, res) => {
@@ -31,7 +49,7 @@ class ViewsController {
   };
 
   getCart = async (req, res) => {
-    if (!req.session?.email) {
+    if (!req.session?.role) {
       return res.redirect("/logIn");
     }
 
@@ -44,7 +62,7 @@ class ViewsController {
 
   logIn = (req, res) => {
     //si ya estoy logueado me redirecciona al home
-    if (req.session?.email) {
+    if (req.session?.role) {
       return res.redirect("/");
     }
 
@@ -57,7 +75,7 @@ class ViewsController {
   };
 
   signIn = (req, res) => {
-    if (req.session?.email) {
+    if (req.session?.role) {
       return res.redirect("/");
     }
     let failed = false;
@@ -68,11 +86,11 @@ class ViewsController {
   };
 
   profile = async (req, res) => {
-    if (!req.session?.email) {
+    if (!req.session?.role) {
       return res.redirect("/logIn");
     }
 
-    if (req.session.admin === true) {
+    if (req.session.role === "admin") {
       return res.redirect("/");
     }
     const user = await this.userService.getUser({ email: req.session.email });
@@ -91,6 +109,20 @@ class ViewsController {
     try {
       const errorFile = fs.readFileSync("./errors.log", "utf8");
       res.render("loggerView", { errorFile: errorFile });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  restorePasswordEmail = async (req, res) => {
+    try {
+      res.render("restorePasswordMail", { style: "style.css" });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  restorePassword = async (req, res) => {
+    try {
+      res.render("restorePassword", { style: "style.css" });
     } catch (error) {
       console.log(error);
     }

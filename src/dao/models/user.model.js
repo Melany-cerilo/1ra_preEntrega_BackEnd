@@ -9,6 +9,7 @@ const usersSchema = new mongoose.Schema({
   age: { type: Number, required: true, max: 100 },
   password: { type: String, required: true, max: 300 },
   cart: { type: String, ref: "carritos" },
+  role: { type: String, required: true, default: "user" },
 });
 
 const usersModel = mongoose.model(usersCollection, usersSchema);

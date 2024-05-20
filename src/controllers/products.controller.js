@@ -130,6 +130,7 @@ class productController {
             stock: req.body.stock,
             category: req.body.category,
             status: true,
+            owner: req.session.email,
           };
           resultado = await this.productsService.addProduct(newProduct);
           if (resultado === null) {
@@ -237,21 +238,37 @@ class productController {
     try {
       let idProduct = req.params.idProduct;
       let error;
-      let resultado = await this.productsService.deleteProduct(idProduct);
-      if (resultado.deletedCount === 0) {
-        CustomError.createError(req, {
-          message: "Error eliminando el producto",
-          cause: generateProductNotFoundInfo(),
-          code: EErrors.PRODUCT_NOT_FOUND,
-        });
-        // error = "No se encontró producto para eliminar";
-      } else if (resultado === null) {
-        CustomError.createError(req, {
-          message: "Error eliminando el producto",
-          cause: generateDataBaseInfo(),
-          code: EErrors.DATABASE_ERROR,
-        });
-        // error = "Error de sistema";
+      if (req.session.role !== "admin") {
+        //Si no es admin, solo puede borrar productos propios
+        let product = await this.productsService.getProductById(idProduct);
+        if (!product) {
+          CustomError.createError(req, {
+            message: "Error eliminando el producto",
+            cause: generateProductNotFoundInfo(),
+            code: EErrors.PRODUCT_NOT_FOUND,
+          });
+        } else if (product.owner !== req.session.email) {
+          error =
+            "No tiene permiso para eliminar un producto del cual no es dueño";
+        }
+      }
+      if (!error) {
+        let resultado = await this.productsService.deleteProduct(idProduct);
+        if (resultado.deletedCount === 0) {
+          CustomError.createError(req, {
+            message: "Error eliminando el producto",
+            cause: generateProductNotFoundInfo(),
+            code: EErrors.PRODUCT_NOT_FOUND,
+          });
+          // error = "No se encontró producto para eliminar";
+        } else if (resultado === null) {
+          CustomError.createError(req, {
+            message: "Error eliminando el producto",
+            cause: generateDataBaseInfo(),
+            code: EErrors.DATABASE_ERROR,
+          });
+          // error = "Error de sistema";
+        }
       }
       if (!error) {
         res.send({ status: "success", msg: "Producto eliminado" });
