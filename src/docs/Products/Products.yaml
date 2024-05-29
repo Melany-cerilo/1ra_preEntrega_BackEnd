@@ -1,0 +1,231 @@
+paths:
+  /api/products:
+    get:
+      summary: obtener productos con posibilidad de limitar la cantidad de resultados, realizar ordenamiento asc o desc, filtrar por categoria y pagina.
+      tags: 
+        - Products
+      responses:
+        "200":
+          description: paginación correcta
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/getProducts"
+        "400":
+          description: error buscando productos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+    post:
+      summary: agregar un producto a la lista de productos.
+      tags: 
+        - Add product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addProduct"
+      responses:
+        "200":
+          description: se agrega producto correctamente
+        "400":
+          description: error creando el producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "401":
+          description: no esta autorizado a crear un producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "403":
+          description: no tiene permisos para realizar esta accion
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "500":
+          description: error no contemplado
+  /api/products/{idProduct}:
+    get:
+      summary: obtener producto por ID.
+      tags: 
+        - Product
+      parameters:
+        - name: idProduct
+          in: path
+          required: true
+          description: ID de producto
+      responses:
+        "200":
+          description: se encuentra producto con el id enviado por parametro
+        "400":
+          description: error buscando el producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+    put:
+      summary: actualizar un producto de la lista de productos.
+      tags: 
+        - Update product
+      parameters:
+        - name: idProduct
+          in: path
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: Producto modificado
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "400":
+          description: Error actualizando el producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "401":
+          description: no esta autorizado a actualizar el producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "403":
+          description: no tiene permisos para realizar esta accion
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "500":
+          description: error no contemplado
+
+    delete:
+      summary: eliminar un producto buscandolo por ID que se envia por parametro.
+      tags: 
+        - Delete product
+      parameters:
+        - name: idProduct
+          in: path
+          required: true
+          description: ID de producto
+
+      responses:
+        "200":
+          description: Producto eliminado
+        "400":
+          description: Error eliminando el producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id autogenerado por mongo
+        title:
+          type: string
+          description: Titulo del producto, campo requerido.
+        price:
+          type: number
+          description: precio del producto, campo requerido.
+        code:
+          type: number
+          description: codigo del producto, campo requerido.
+        stock:
+          type: number
+          description: stock del producto, campo requerido.
+        category:
+          type: string
+          description: categoria del producto, campo requerido.
+        status:
+          type: boolean
+          description: Estado del producto, campo requerido.
+        owner:
+          type: string
+          description: comprador del producto, campo requerido. por defecto es ADMIN
+  requestBodies:
+    addProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Titulo del producto
+        description:
+          type: string
+          description: Descripción del producto
+        price:
+          type: number
+          description: precio del producto
+        code:
+          type: number
+          description: codigo del producto
+        stock:
+          type: number
+          description: stock del producto
+      example:
+        title: botas
+        description: para lluvia
+        price: 90000
+        code: 12
+        stock: 11
+        category: calzado
+
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Titulo del producto
+        description:
+          type: string
+          description: Descripción del producto
+        price:
+          type: number
+          description: precio del producto
+        code:
+          type: number
+          description: codigo del producto
+        stock:
+          type: number
+          description: stock del producto
+      example:
+        title: botas
+        description: para lluvia
+        price: 180000
+        code: 12
+        stock: 11
+        category: calzado
+  responseBodies:
+    getProducts:
+      type: object
+      properties:
+        status:
+          type: string
+        payload:
+          type: array
+          items:
+            $ref: "#components/schemas/Products"
+    defaultResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        msg:
+          type: string

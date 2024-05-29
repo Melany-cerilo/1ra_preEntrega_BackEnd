@@ -17,7 +17,7 @@ class CartController {
     let resultado = await this.cartService.addCart();
     if (!resultado._id) {
       req.logger.debug("resultado de addCart fallido" + " " + resultado);
-      res.send({ status: "error", msg: `No se pudo crear el carrito` });
+      res.status(400).send({ status: "error", msg: `No se pudo crear el carrito` });
     } else {
       res.send({
         status: "success",
@@ -92,7 +92,7 @@ class CartController {
       });
     } else {
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 
@@ -104,7 +104,7 @@ class CartController {
     } else {
       let error = `No se encontró carrito con Id: ${cartId}`;
       req.logger.error(error);
-      res.send({
+      res.status(400).send({
         status: "error",
         msg: error,
       });
@@ -122,7 +122,7 @@ class CartController {
     } else {
       let error = "No se encontraron carritos";
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 
@@ -137,7 +137,7 @@ class CartController {
       });
     } else {
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 
@@ -195,7 +195,7 @@ class CartController {
       });
     } else {
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 
@@ -232,7 +232,7 @@ class CartController {
       });
     } else {
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 
@@ -267,7 +267,7 @@ class CartController {
       });
     } else {
       req.logger.error(error);
-      res.send({ status: "error", msg: error });
+      res.status(400).send({ status: "error", msg: error });
     }
   };
 

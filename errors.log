@@ -21,3 +21,5 @@
 {"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
 {"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
 {"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 12 ya existe en base de datos, POST en /api/products - 27/5/2024"}
+{"level":"error","message":"No hay cambios"}

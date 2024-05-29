@@ -13,6 +13,8 @@ import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import ProductManagerDb from "../src/dao/mongoDb/productManagerDb.js";
 import errorHandler from "./config/errorMiddleware.js";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 
 const app = Express();
 const PORT = 8080;
@@ -80,6 +82,20 @@ mongoose
   .catch((error) => {
     logger.error("Error al conectarse con la DB", error);
   });
+
+//swagger
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Documentación del poder y el saber",
+      description: "API pensada para la clase de swagger",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 //exporto socketserver para poder usarlo en los router.
 export default socketServer;

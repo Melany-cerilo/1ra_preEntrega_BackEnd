@@ -1,0 +1,313 @@
+paths:
+  /api/carts:
+    get:
+      summary: trae el carrito con el ID que se indica con el parametro
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Se encontraron carritos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/getCarts"
+        "400":
+          description: No se encontraron carritos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+    post:
+      summary: agregar un carrito a la colección de carritos en la db. asignandole un ID (al principio estará vacio)
+      tags:
+        - Add cart
+
+      responses:
+        "200":
+          description: Carrito creado
+        "400":
+          description: No se pudo crear el carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+
+  /api/carts/{cartId}:
+    get:
+      summary: traer el carrito con el ID que se indica con el parametro
+      tags:
+        - Cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID de carrito
+      responses:
+        "200":
+          description: se encuentra el carrito con el id enviado por parametro
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/getCartById"
+        "400":
+          description: error buscando el carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+    put:
+      summary: actualizar el carrito con nuevo arreglo de productos
+      tags:
+        - Update cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateCart"
+      responses:
+        "200":
+          description: Carrito modificado con productos nuevos
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "400":
+          description: Error modificando el carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+
+    delete:
+      summary: eliminar un producto buscandolo por ID que se envia por parametro.
+      tags:
+        - Delete all products from cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID de carrito
+
+      responses:
+        "200":
+          description: Productos eliminados de tu carrito
+        "400":
+          description: No se pudieron eliminar los productos del carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+  /api/carts/{cartId}/product/{prodId}:
+    post:
+      summary: agregar productos y cantidad al carrito indicado.
+      tags:
+        - Add to cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID de carrito
+        - name: prodId
+          in: path
+          required: true
+          description: ID de producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addToCart"
+      responses:
+        "200":
+          description: Se agregaron productos al carrito
+        "400":
+          description: No se pueron agregar productos al carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"              
+  /api/carts/{cartId}/products/{prodId}:
+    put:
+      summary: actualizar solo la cantidad de ejemplares del producto
+      tags:
+        - Update cuantity
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID de carrito
+        - name: prodId
+          in: path
+          required: true
+          description: ID de producto
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addToCart"
+      responses:
+        "200":
+          description: La cantidad de tu producto modificada
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+        "400":
+          description: No se pudo modificar la cantidad de tu producto
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+    delete:
+      summary: eliminar del carrito el producto seleccionado
+      tags:
+        - Remove product form cart
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: ID de carrito
+        - name: prodId
+          in: path
+          required: true
+          description: ID de producto
+      responses:
+        "200":
+          description: Producto eliminado del carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/getCarts"
+        "400":
+          description: No se pudo eliminar el producto del carrito
+          content:
+            application/json:
+              schema:
+                $ref: "#components/responseBodies/defaultResponse"
+
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID autogenerado por Mongo
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Id autogenerado por mongo
+              id:
+                type: string
+                description: Id de Mongo del producto, originado desde la collection de Productos
+              quantity:
+                type: number
+                description: cantidad del producto
+  requestBodies:
+    addToCart:
+      type: object
+      properties:
+        quantity:
+          type: string
+          description: cantidad del producto
+      example:
+        quantity: 1
+    updateQuantity:
+      type: object
+      properties:
+        quantity:
+          type: string
+          description: modificacion de la cantidad del producto
+      example:
+        quantity: 1
+    updateCart:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Id de Mongo del producto, originado desde la collection de Productos
+              quantity:
+                type: number
+                description: cantidad del producto
+  responseBodies:
+    getCarts:
+      type: object
+      properties:
+        status:
+          type: string
+        payload:
+          type: array
+          items:
+            $ref: "#components/schemas/Carts"
+    getCartById:
+      type: object
+      properties:
+        status:
+          type: string
+        payload:
+          type: object
+          properties:
+            _id:
+              type: string
+              description: ID autogenerado por Mongo
+            products:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    description: Id autogenerado por mongo
+                  id:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Id autogenerado por mongo
+                      title:
+                        type: string
+                        description: Titulo del producto, campo requerido.
+                      price:
+                        type: number
+                        description: precio del producto, campo requerido.
+                      code:
+                        type: number
+                        description: codigo del producto, campo requerido.
+                      stock:
+                        type: number
+                        description: stock del producto, campo requerido.
+                      category:
+                        type: string
+                        description: categoria del producto, campo requerido.
+                      status:
+                        type: boolean
+                        description: Estado del producto, campo requerido.
+                      owner:
+                        type: string
+                        description: comprador del producto, campo requerido. por defecto es ADMIN
+                  quantity:
+                    type: number
+                    description: cantidad del producto
+    defaultResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        msg:
+          type: string

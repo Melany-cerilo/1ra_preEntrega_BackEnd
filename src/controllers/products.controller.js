@@ -86,7 +86,9 @@ class productController {
         nextLink: nextLink,
       });
     } else {
-      res.send({ status: "error" });
+      res
+        .status(400)
+        .send({ status: "error", msg: "No se encontraron productos" });
     }
   };
 
@@ -154,7 +156,7 @@ class productController {
           await this.productsService.getProducts()
         );
       } else {
-        res.send({
+        res.status(400).send({
           status: "error",
           msg: "Error al agregar producto: " + error,
         });
@@ -227,7 +229,7 @@ class productController {
           await this.productsService.getProducts()
         );
       } else {
-        res.send({ status: "error", msg: error });
+        res.status(400).send({ status: "error", msg: error });
       }
     } catch (error) {
       next(error);
@@ -277,7 +279,7 @@ class productController {
           await this.productsService.getProducts()
         );
       } else {
-        res.send({ status: "error", msg: error });
+        res.status(400).send({ status: "error", msg: error });
       }
     } catch (error) {
       next(error);
