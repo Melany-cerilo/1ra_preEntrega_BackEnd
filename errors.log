@@ -23,3 +23,27 @@
 {"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/664bcdb8391c7da6bfea1f12 - 20/5/2024"}
 {"level":"error","message":" Error!!! Error creando el producto: Código 12 ya existe en base de datos, POST en /api/products - 27/5/2024"}
 {"level":"error","message":"No hay cambios"}
+{"level":"error","message":"No existe el producto 6657bd57e1ef231d5697cc41"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6657bd57e1ef231d5697cc41 - 29/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6657bd57e1ef231d5697cc41 - 29/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6657bd57e1ef231d5697cc41 - 29/5/2024"}
+{"level":"error","message":" Error!!! Error eliminando el producto: No se encontró el producto indicado, DELETE en /api/products/6657bd57e1ef231d5697cc41 - 29/5/2024"}
+{"level":"error","message":"No tiene permisos para agregar un producto creado por usted"}
+{"level":"error","message":"No tiene permisos para agregar un producto creado por usted"}
+{"level":"error","message":"No se encontró carrito con Id: 664bcbdc391c7da6bfea1e90"}
+{"level":"error","message":"No se encontró carrito para modificar"}
+{"level":"error","message":"No se encontró carrito para modificar"}
+{"level":"error","message":"No se encontró carrito para modificar"}
+{"level":"error","message":"No se encontró carrito para modificar"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 9191 ya existe en base de datos, POST en /api/products - 4/6/2024"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 9191 ya existe en base de datos, POST en /api/products - 4/6/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fa7b68b4b26ccd4b6faa4 - 4/6/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fa7eb8b4b26ccd4b6fab0 - 4/6/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fa8088b4b26ccd4b6fabc - 4/6/2024"}
+{"level":"error","message":"No hay suficiente stock, ya agregaste 12 en total"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fad3130621997c87c168b - 4/6/2024"}
+{"level":"error","message":"No hay cambios"}
+{"level":"error","message":"No hay cambios"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb0480c94ded2d622aa4d - 4/6/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb0bc0c94ded2d622aa59 - 4/6/2024"}
+{"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb11e0c94ded2d622aa76 - 4/6/2024"}
