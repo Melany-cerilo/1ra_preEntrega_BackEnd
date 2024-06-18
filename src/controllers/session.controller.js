@@ -26,10 +26,13 @@ class SessionController {
     res.redirect("/logIn");
   };
 
-  logOut = (req, res) => {
+  logOut = async (req, res) => {
     if (!req.session?.role) {
       return res.redirect("/");
     }
+    let user = await userService.getUser({ email: req.session.email });
+        user.last_connection = new Date( )
+        await userService.updateUser(user._id, user)
     req.session.destroy((err) => {
       console.log("Se destruye la sesion");
       console.log(err);

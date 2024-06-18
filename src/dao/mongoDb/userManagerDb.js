@@ -9,13 +9,18 @@ class userManagerDb {
 
   getUserById = async (id) => await this.userModel.findById(id);
 
-  createUser = async (newUser) => await this.userModel.create(newUser);
+  createUser = async (newUser) => {
+    try {
+      return await this.userModel.create(newUser);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  updateUser = async (userId, user) =>
+    await this.userModel.updateOne({ _id: userId }, user);
 
-  makeUserPremium = async (email) =>
-    await this.userModel.updateOne(
-      { email: email },
-      { $set: { role: "premium" } }
-    );
+  makeUserPremium = async (id) =>
+    await this.userModel.updateOne({ _id: id }, { $set: { role: "premium" } });
   updatePassword = async (email, password) =>
     await this.userModel.updateOne(
       { email: email },

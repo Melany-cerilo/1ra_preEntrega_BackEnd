@@ -55,4 +55,5 @@ router.get(
 router.get("/loggerTest", viewsController.loggerTest);
 router.get("/restorePasswordMail", viewsController.restorePasswordEmail);
 router.get("/restorePassword", viewsController.restorePassword);
+router.get("/uploadFiles", viewsController.uploadFiles)
 export default router;

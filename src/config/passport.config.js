@@ -28,8 +28,9 @@ const initializePassport = () => {
             email,
             age,
             password: createHash(password),
-            cart: cartId,
+            cart: cartId._id.toString(),
             role: "user",
+            documents: [],
           };
           logger.debug(newUser);
           let result = await userService.createUser(newUser);
@@ -66,6 +67,7 @@ const initializePassport = () => {
               password: " ",
               cart: cartId,
               role: "user",
+              documents: [],
             };
             logger.debug(newUser);
             let result = await userService.createUser(newUser);
@@ -133,7 +135,8 @@ const initializePassport = () => {
               return done(null, false);
             }
             if (!isValidPassword(user, password)) return done(null, false);
-
+            user.last_connection = new Date();
+            await userService.updateUser(user._id, user);
             return done(null, user);
           }
         } catch (error) {

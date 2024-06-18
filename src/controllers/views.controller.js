@@ -127,6 +127,16 @@ class ViewsController {
       console.log(error);
     }
   };
+  uploadFiles = async (req, res) => {
+    try {
+      const user = await this.userService.getUser({ email: req.session.email });
+      res.render("uploadFiles", {userId: user._id});
+      
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 export default ViewsController;

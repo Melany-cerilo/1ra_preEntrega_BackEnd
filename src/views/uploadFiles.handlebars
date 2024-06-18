@@ -1,0 +1,21 @@
+<body>
+  <h1>
+    Sube aquí tus archivos
+  </h1>
+  <form
+    action="/api/users/{{userId}}/documents"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <label for="identificacion">Indentificación</label>
+    <input type="file" id="identificacion" name="identificacion" />
+    <br />
+    <label for="cmpdom">Comprobante de domicilio</label>
+    <input type="file" id="cmpdom" name="cmpdom" />
+    <br />
+    <label for="cmpedc">Comprobante de estado de cuenta</label>
+    <input type="file" id="cmpedc" name="cmpedc" />
+    <br />
+    <button type="submit">Subir archivo </button>
+  </form>
+</body>

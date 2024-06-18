@@ -10,6 +10,14 @@ const usersSchema = new mongoose.Schema({
   password: { type: String, required: true, max: 300 },
   cart: { type: String, ref: "carritos" },
   role: { type: String, required: true, default: "user" },
+  last_connection: { type: Date },
+
+  documents: [
+    {
+      name: { type: String, required: true },
+      reference: { type: String, required: true },
+    },
+  ],
 });
 
 const usersModel = mongoose.model(usersCollection, usersSchema);
