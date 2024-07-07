@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 
 const enviroment = "production";
 dotenv.config({
-  path: enviroment === "production" ? "./.prd.env" : "./.dev.env",
+  path: enviroment === "production" ? "./.env" : "./.dev.env",
 });
 //eguv xzyz qkud rqgy
 export default {
