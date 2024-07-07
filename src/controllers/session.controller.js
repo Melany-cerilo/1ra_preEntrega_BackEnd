@@ -30,9 +30,14 @@ class SessionController {
     if (!req.session?.role) {
       return res.redirect("/");
     }
-    let user = await userService.getUser({ email: req.session.email });
-        user.last_connection = new Date( )
-        await userService.updateUser(user._id, user)
+    if (req.session.role !== "admin") {
+      let user = await userService.getUser({ email: req.session.email });
+      if (user) {
+        user.last_connection = new Date();
+        await userService.updateUser(user._id, user);
+      }
+    }
+
     req.session.destroy((err) => {
       console.log("Se destruye la sesion");
       console.log(err);

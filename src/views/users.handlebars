@@ -1,0 +1,34 @@
+{{! plantilla con products actuales para el home  '/'}}
+
+<div class="navbar">
+  <a href="/">Inicio</a>
+  <button class="delInactive">Borrar inactivos</button>
+</div>
+<div class="resultHeader"></div>
+
+<div class="container d-flex justify-content-center">
+  <div class="row">
+    {{#each users}}
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{this.first_name}} {{this.last_name}}</h5>
+            <p class="card-text">ID: {{this._id}}</p>
+            <p class="card-text">Edad: {{this.age}}</p>
+            <p class="card-text">Rol: {{this.role}}</p>
+            <div id="{{this._id}}" class="roleMod btn btn-primary">Hacer Premium</div>
+            <div id="{{this._id}}" class="userDel btn btn-danger">Eliminar
+              usuario</div><br />
+            <div id="{{this._id}}" class="resultText"></div>
+
+          </div>
+        </div>
+      </div>
+
+    {{/each}}
+
+  </div>
+
+</div>
+
+<script src="/js/users.js"></script>

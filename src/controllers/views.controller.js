@@ -130,13 +130,20 @@ class ViewsController {
   uploadFiles = async (req, res) => {
     try {
       const user = await this.userService.getUser({ email: req.session.email });
-      res.render("uploadFiles", {userId: user._id});
-      
-
+      res.render("uploadFiles", { userId: user._id });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+  users = async (req, res) => {
+    try {
+      let users = await userService.getUsers();
+
+      res.render("users", { users, style: "style.css" });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default ViewsController;

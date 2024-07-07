@@ -15,14 +15,20 @@ export default class MailingService {
   }
 
   sendSimpleMail = async ({ from, to, subject, html, attachments = [] }) => {
-    let result = await this.client.sendMail({
-      from,
-      to,
-      subject,
-      html,
-      attachments,
-    });
-    console.log(result);
-    return result;
+    try {
+      console.log("sendsimplemail");
+      let result = await this.client.sendMail({
+        from,
+        to,
+        subject,
+        html,
+        attachments,
+      });
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   };
 }

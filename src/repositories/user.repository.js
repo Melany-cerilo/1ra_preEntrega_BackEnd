@@ -23,6 +23,12 @@ class UserRepository {
   async updatePassword(email, password) {
     return await this.dao.updatePassword(email, password);
   }
+  async getUsers(filter) {
+    return await this.dao.getUsers(filter);
+  }
+  async deleteUsers(userKeys) {
+    return await this.dao.deleteUsers(userKeys);
+  }
 }
 
 export default UserRepository;

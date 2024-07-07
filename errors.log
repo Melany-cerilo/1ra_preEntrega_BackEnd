@@ -47,3 +47,5 @@
 {"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb0480c94ded2d622aa4d - 4/6/2024"}
 {"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb0bc0c94ded2d622aa59 - 4/6/2024"}
 {"level":"error","message":" Error!!! Error buscando el producto: No se encontró el producto indicado, GET en /api/products/665fb11e0c94ded2d622aa76 - 4/6/2024"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 867 ya existe en base de datos, POST en /api/products/ - 7/7/2024"}
+{"level":"error","message":" Error!!! Error creando el producto: Código 867 ya existe en base de datos, POST en /api/products/ - 7/7/2024"}

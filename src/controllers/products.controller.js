@@ -1,5 +1,8 @@
 import socketServer from "../app.js";
-import { productService } from "../repositories/repository.config.js";
+import {
+  productService,
+  userService,
+} from "../repositories/repository.config.js";
 import CustomError from "../services/errors/CustomError.js";
 import EErrors from "../services/errors/enums.js";
 import {
@@ -8,6 +11,7 @@ import {
   generateProductPropertyMissingInfo,
   generateProductNotFoundInfo,
 } from "../services/errors/info.js";
+import MailingService from "../services/mail/mailingService.js";
 
 class productController {
   constructor() {
@@ -236,13 +240,26 @@ class productController {
     }
   };
 
+  sendDeletedProdEmail = async (user, product) => {
+    const mailer = new MailingService();
+    const mailOptions = {
+      from: "Mel ecommerce",
+      to: user.email,
+      subject: `Se eliminó un producto tuyo`,
+      html: `
+      <p>El siguiente producto fue eliminado: ${product.id}: "${product.title} - ${product.description}" </p>
+      `,
+    };
+    return await mailer.sendSimpleMail(mailOptions);
+  };
   deleteProduct = async (req, res, next) => {
     try {
       let idProduct = req.params.idProduct;
       let error;
+      let product = await this.productsService.getProductById(idProduct);
+
       if (req.session.role !== "admin") {
         //Si no es admin, solo puede borrar productos propios
-        let product = await this.productsService.getProductById(idProduct);
         if (!product) {
           CustomError.createError(req, {
             message: "Error eliminando el producto",
@@ -270,6 +287,11 @@ class productController {
             code: EErrors.DATABASE_ERROR,
           });
           // error = "Error de sistema";
+        } else {
+          let user = await userService.getUser({ email: product.owner });
+          if (user && user.role === "premium") {
+            let emailRes = await this.sendDeletedProdEmail(user, product);
+          }
         }
       }
       if (!error) {
@@ -282,6 +304,7 @@ class productController {
         res.status(400).send({ status: "error", msg: error });
       }
     } catch (error) {
+      console.log(error);
       next(error);
     }
   };

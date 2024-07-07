@@ -4,6 +4,7 @@ class userManagerDb {
   constructor() {
     this.userModel = userModel;
   }
+  getUsers = async (filter) => await this.userModel.find(filter).lean();
 
   getUser = async (filter) => await this.userModel.findOne(filter).lean();
 
@@ -26,6 +27,14 @@ class userManagerDb {
       { email: email },
       { $set: { password: password } }
     );
+
+  deleteUsers = async (userKeys) => {
+    try {
+      return await this.userModel.deleteMany({ _id: { $in: userKeys } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
 
 export default userManagerDb;
