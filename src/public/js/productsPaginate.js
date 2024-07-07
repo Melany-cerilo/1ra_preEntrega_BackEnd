@@ -1,4 +1,4 @@
-let baseURL = "http://localhost:8080";
+let baseURL = "";
 let initialPath = "/api/products?limit=5&page=1&sort=asc";
 let prevPath = "";
 let nextPath = "";

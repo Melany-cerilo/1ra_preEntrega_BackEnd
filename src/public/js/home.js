@@ -1,5 +1,5 @@
-let path = "http://localhost:8080/api/carts/";
-let prodPath = "http://localhost:8080/api/products/";
+let path = "/api/carts/";
+let prodPath = "/api/products/";
 const productsToAdd = document.getElementsByClassName("productAdd");
 const stockTexts = document.getElementsByClassName("stockText");
 const productsToDel = document.getElementsByClassName("productDel");

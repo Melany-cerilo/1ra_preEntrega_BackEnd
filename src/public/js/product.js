@@ -1,4 +1,4 @@
-let prodPath = "http://localhost:8080/api/products/";
+let prodPath = "/api/products/";
 const modifyForm = document.getElementById("modifyForm");
 const addForm = document.getElementById("addForm");
 const resultText = document.querySelector(".resultText");

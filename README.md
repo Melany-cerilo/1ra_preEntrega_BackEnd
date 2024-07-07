@@ -75,8 +75,7 @@ https://www.loom.com/share/a141ecb8ba774e8588866ea277685725?sid=669da11f-7eea-42
 
 - VISTAS:
 
-- http://localhost:8080
-  ![views](./capturas/localhost8080.png)
+- ![views](./capturas/localhost8080.png)
 
 - PAGINACIÓN 1
   ![views](./capturas/paginate1.png)

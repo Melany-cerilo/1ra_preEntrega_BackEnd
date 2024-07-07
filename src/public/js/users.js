@@ -1,4 +1,4 @@
-let path = "http://localhost:8080/api/users";
+let path = "/api/users";
 const usersToDel = document.getElementsByClassName("userDel");
 const rolesToMod = document.getElementsByClassName("roleMod");
 const delInactive = document.getElementsByClassName("delInactive");

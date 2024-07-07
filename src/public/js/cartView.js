@@ -1,4 +1,4 @@
-let path = "http://localhost:8080/api/carts/";
+let path = "/api/carts/";
 const cart = document.getElementById("cart");
 const cartId = document.querySelector("#cart-header h1 span");
 const products = document.getElementById("products");

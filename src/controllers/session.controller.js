@@ -88,7 +88,7 @@ class SessionController {
         subject: "Recuperación de contraseña",
         html: `
         <p>Por favor, haz click en el siguiente enlace para recuperar tu contraseña</p>
-        <a href="http://localhost:8080/api/sessions/restorePassword/${token}"> Recuperar contraseña</a>
+        <a href="/api/sessions/restorePassword/${token}"> Recuperar contraseña</a>
         `,
       };
       await mailer.sendSimpleMail(mailOptions);
