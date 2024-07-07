@@ -19,6 +19,7 @@ import swaggerUiExpress from "swagger-ui-express";
 const app = Express();
 const PORT = 3000;
 
+console.log(config);
 const httpServer = app.listen(PORT, () =>
   console.log(`servidor con express en el puerto ${PORT}`)
 );
