@@ -4,6 +4,7 @@ const enviroment = "production";
 dotenv.config({
   path: enviroment === "production" ? "./.env" : "./.dev.env",
 });
+console.log(process.env)
 //eguv xzyz qkud rqgy
 export default {
   port: process.env.PORT,

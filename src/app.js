@@ -17,7 +17,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
 const app = Express();
-const PORT = 3000;
+const PORT = config.port;
 
 console.log(config);
 const httpServer = app.listen(PORT, () =>
