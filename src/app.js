@@ -17,7 +17,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
 
 const app = Express();
-const PORT = 8080;
+const PORT = 3000;
 
 const httpServer = app.listen(PORT, () =>
   console.log(`servidor con express en el puerto ${PORT}`)
