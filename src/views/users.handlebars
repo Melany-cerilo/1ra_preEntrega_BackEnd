@@ -9,11 +9,12 @@
 <div class="container d-flex justify-content-center">
   <div class="row">
     {{#each users}}
-      <div class="col-md-6 mt-2">
-        <div class="card">
+      <div class="col">
+        <div class="card mt-4">
           <div class="card-body">
             <h5 class="card-title">{{this.first_name}} {{this.last_name}}</h5>
             <p class="card-text">ID: {{this._id}}</p>
+            <p class="card-text">Email: {{this.email}}</p>
             <p class="card-text">Edad: {{this.age}}</p>
             <p class="card-text">Rol: {{this.role}}</p>
             <div id="{{this._id}}" class="roleMod btn btn-primary">Hacer Premium</div>

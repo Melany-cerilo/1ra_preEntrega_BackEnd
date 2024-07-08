@@ -24,8 +24,8 @@ const storage = multer.diskStorage({
     }
     if (
       file.fieldname === "identificacion" ||
-      file.fieldname === "identificacion" ||
-      file.fieldname === "identificacion"
+      file.fieldname === "cmpdom" ||
+      file.fieldname === "cmpedc"
     ) {
       folder = `documents`; // Carpeta específica para el usuario
     }

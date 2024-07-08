@@ -1,20 +1,34 @@
 <body>
-  <h1>
+  <br />
+  <h1 class="justify-content-center">
     Sube aquí tus archivos
   </h1>
+  <br />
+  <br />
+  <h4>
+    Para ser premium y poder crear productos, tenes que subir la siguiente
+    documentacion:
+  </h4>
+  <br />
   <form
     action="/api/users/{{userId}}/documents"
     method="post"
     enctype="multipart/form-data"
   >
-    <label for="identificacion">Indentificación</label>
+    <label for="identificacion">    Indentificación: </label>
+    <br />
     <input type="file" id="identificacion" name="identificacion" />
     <br />
-    <label for="cmpdom">Comprobante de domicilio</label>
+    <br />
+    <label for="cmpdom">    Comprobante de domicilio</label>
+    <br />
     <input type="file" id="cmpdom" name="cmpdom" />
     <br />
-    <label for="cmpedc">Comprobante de estado de cuenta</label>
+    <br />
+    <label for="cmpedc">    Comprobante de estado de cuenta</label>
+    <br />
     <input type="file" id="cmpedc" name="cmpedc" />
+    <br />
     <br />
     <button type="submit">Subir archivo </button>
   </form>
