@@ -153,7 +153,6 @@ class usersController {
         let diffTime = Math.abs(currentDate - user.last_connection); //saco diferencia de fechas a ms
         let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); //convierto ms a dias
         return diffDays >= 2 ? true : false;
-        // return diffTime >= 60000 ? true : false;
       });
       console.log(inactiveUsers);
       if (inactiveUsers.length === 0) {

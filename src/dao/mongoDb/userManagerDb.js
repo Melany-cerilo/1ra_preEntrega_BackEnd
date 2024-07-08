@@ -1,10 +1,20 @@
+import UserDTO from "../dto/user.dto.js";
 import userModel from "../models/user.model.js";
 
 class userManagerDb {
   constructor() {
     this.userModel = userModel;
   }
-  getUsers = async (filter) => await this.userModel.find(filter).lean();
+  getUsers = async (filter) => {
+    let users = await this.userModel.find(filter).lean();
+    if (users) {
+      return users.map((user) => {
+        return new UserDTO(user);
+      });
+    } else {
+      return users;
+    }
+  };
 
   getUser = async (filter) => await this.userModel.findOne(filter).lean();
 

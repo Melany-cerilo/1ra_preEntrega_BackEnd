@@ -5,11 +5,10 @@
   {{#if admin}}
   <a href="/users">Admin. Usuarios</a>
   {{else}}
-  <a href="/uploadFiles">Subir Documentación</a>
-  
-  {{/if}}
   <a href="/profile">Mi perfil</a>
+  <a href="/uploadFiles">Subir Documentación</a>
   <a href="/cartView">Mi carrito</a>
+  {{/if}}
 </div>
 
 <div class="user-info">
@@ -36,21 +35,24 @@
             <p class="card-text">Categoria: {{this.category}}</p>
             <p class="card-text">Status: {{this.status}}</p>
             <p class="card-text">Codigo: {{this.code}}</p>
-            {{#if ../creator}}
-              <a href="/modifyProduct/{{this._id}}"
-                class="productMod btn btn-primary"
-              >Modificar producto</a>
-              <div  id="{{this._id}}" class="productDel btn btn-danger">Eliminar
-                producto</div><br>
-              <div id="{{this._id}}" class="resultText"></div>
-            {{/if}}
-
             {{#if ../admin}}
             {{else}}
               <div id="{{this._id}}" class="productAdd btn btn-primary">Agregar
                 al carrito</div>
               <div id="{{this._id}}" class="stockText"></div>
             {{/if}}
+
+            {{#if ../creator}}
+            {{#if ../admin}}
+              <a href="/modifyProduct/{{this._id}}"
+                class="productMod btn btn-primary"
+              >Modificar producto</a>
+            {{/if}}
+              <div  id="{{this._id}}" class="productDel btn btn-danger">Eliminar
+                producto</div><br>
+              <div id="{{this._id}}" class="resultText"></div>
+            {{/if}}
+
 
           </div>
         </div>
