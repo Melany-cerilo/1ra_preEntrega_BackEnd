@@ -61,7 +61,7 @@ app.use(passport.session());
 app.use(appRouter);
 
 //Manejo de errores
-app.use(errorHandler);
+// app.use(errorHandler);
 
 //dejo en escucha el servidor
 socketServer.on("connection", async (socket) => {
